@@ -1,29 +1,21 @@
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:neurunner/player.dart';
 
-class NeurunnerGame extends FlameGame {
+class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
   NeurunnerGame();
-  late NeurunnerPlayer _neurunner;
+  late NeurunnerPlayer player;
 
   @override
   Future<void> onLoad() async {
+    //Loading in the image assets
     await images.loadAll([
       'player/run.png',
-      'background/001_sky.png',
-      'background/002_shadow.png',
-      'background/003_far_shadow.png',
-      'background/004_shadow_trees.png',
-      'background/005_trees_shadow.png',
-      'background/006_lights.png',
-      'background/007_trees_back.png',
-      'background/008_lights2.png',
-      'background/009_trees_front.png',
-      'background/010_grass.png',
-      'background/011_grass_shadow.png',
-      'background/012_leaves.png',
     ]);
+
+    //camera.viewport = FixedResolutionViewport(Vector2(1920, 1080));
 
     //Loading in the parallax background
     ParallaxComponent forestBackground = await loadParallaxComponent([
@@ -40,14 +32,19 @@ class NeurunnerGame extends FlameGame {
       ParallaxImageData('background/011_grass_shadow.png'),
       ParallaxImageData('background/012_leaves.png'),
     ],
-        baseVelocity: Vector2(50.0, 0),
+        baseVelocity: Vector2(150.0, 0),
         velocityMultiplierDelta: Vector2(1.1, 1.0));
     add(forestBackground);
 
     //Loading in the player sprite
-    _neurunner = NeurunnerPlayer(
-      position: Vector2(canvasSize.x / 2, canvasSize.y * 0.9 - 80),
-    );
-    add(_neurunner);
+    player = NeurunnerPlayer();
+    add(player);
+  }
+
+  @override
+  void onTapDown(TapDownInfo info) {
+    super.onTapDown(info);
+    player.jump();
+    
   }
 }
