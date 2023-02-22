@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   flame: ^1.6.0
+  flame_tiled: ^1.9.1
   flutter:
     sdk: flutter
 
@@ -23,3 +24,4 @@ flutter:
     - assets/images/enemies/
     - assets/images/player/
     - assets/images/platforms/
+    - assets/tiles/

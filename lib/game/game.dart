@@ -1,25 +1,34 @@
+import 'dart:ui';
 import 'package:flame/components.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
-import 'package:neurunner/platform.dart';
-import 'package:neurunner/player.dart';
+import 'package:neurunner/game/platforms/platform_module.dart';
+import 'package:neurunner/game/actors/player.dart';
 
 class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
   NeurunnerGame();
-  late NeurunnerPlayer player;
-  late Sprite tileSprite;
+  //late NeurunnerPlayer player;
+  PlatformModule? currentPlatform;
+  List<String> platformModules = [];
 
   @override
   Future<void> onLoad() async {
+    await Flame.device.fullScreen();
+    await Flame.device.setLandscape();
+    camera.viewport = FixedResolutionViewport(Vector2(640, 256));
+
     // Loading in the image assets
     await images.loadAll([
       'player/run.png',
-      'platforms/grass_tile_out_32x32.png',
-      'platforms/grass_tile_32x32.png',
     ]);
 
-    camera.viewport = FixedResolutionViewport(Vector2(640, 256));
+    // List of all platform modules
+    platformModules = [
+      'platform_0.tmx',
+      'platform_1.tmx',  
+    ];
 
     // Loading in the parallax background
     ParallaxComponent forestBackground = await loadParallaxComponent([
@@ -34,24 +43,37 @@ class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
       ParallaxImageData('background/009_trees_front.png'),
       ParallaxImageData('background/012_leaves.png'),
     ],
-        baseVelocity: Vector2(100.0, 0),
-        
+        baseVelocity: Vector2(25.0, 0),
         velocityMultiplierDelta: Vector2(1.1, 1.0));
 
     add(forestBackground);
 
-    // Adding the ground tiles
-    //List<Platform> groundTiles = Platform.generateGroundTiles(100, size.y);
-    //addAll(groundTiles);
+    // Adding an initial platform segment
+    for(var platformModule in platformModules){
+      loadPlatform(platformModule);
+    }
+    
 
-    // Loading in the player 
-    player = NeurunnerPlayer();
-    add(player);
+    // Loading in the player
+    // player = NeurunnerPlayer();
+    // add(player);
+    return super.onLoad();
   }
 
   @override
   void onTapDown(TapDownInfo info) {
     super.onTapDown(info);
-    player.jump();
+    //player.jump();
+  }
+
+  @override
+  void update(double dt) {
+    super.update(dt);
+  }
+
+  void loadPlatform(String platformName) async {
+    currentPlatform?.removeFromParent();
+    currentPlatform = PlatformModule(platformName);
+    add(currentPlatform!);
   }
 }

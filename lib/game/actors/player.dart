@@ -1,5 +1,5 @@
 import 'package:flame/components.dart';
-import 'package:neurunner/game.dart';
+import 'package:neurunner/game/game.dart';
 
 const double gravity = 1000;
 
@@ -8,9 +8,12 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   double velocityY = 0.0;
   int jumpCount = 0;
 
-  NeurunnerPlayer()
-      : super(
-          size: Vector2.all(64),
+  NeurunnerPlayer({
+    required Vector2 position,
+    required Vector2 size,
+  }) : super(
+          position: position,
+          size: size,
           anchor: Anchor.topCenter,
         );
 
@@ -24,15 +27,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         stepTime: 0.1,
       ),
     );
-  }
-
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
-    // We don't need to set the position and size in the constructor, we can set it directly here since it will
-    // be called once before the first time it is rendered.
-    super.position = Vector2(gameRef.size.x / 4, gameRef.size.y / 2);
-    super.size = Vector2.all(gameRef.size.y / 8);
+    
   }
 
   @override
@@ -43,6 +38,8 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
     // d = d0 + v * t
     position.y += velocityY * dt;
+
+    position.x += 50 * dt;
 
     if (isOnGround()) {
       position.y = (gameRef.size.y - gameRef.size.y / 9 - gameRef.size.y / 10);
@@ -82,12 +79,12 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       // First jump
       velocityY = -400;
       // Set jump count to 1 on first jump
-      jumpCount = 1; 
+      jumpCount = 1;
     } else if (jumpCount < 2) {
       // Allow double jump if jump count is less than 2
       velocityY = -350;
       // Increment jump count on second jump
-      jumpCount += 1; 
+      jumpCount += 1;
     }
   }
 
