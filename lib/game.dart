@@ -2,22 +2,26 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
+import 'package:neurunner/platform.dart';
 import 'package:neurunner/player.dart';
 
 class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
   NeurunnerGame();
   late NeurunnerPlayer player;
+  late Sprite tileSprite;
 
   @override
   Future<void> onLoad() async {
-    //Loading in the image assets
+    // Loading in the image assets
     await images.loadAll([
       'player/run.png',
+      'platforms/grass_tile_out_32x32.png',
+      'platforms/grass_tile_32x32.png',
     ]);
 
-    //camera.viewport = FixedResolutionViewport(Vector2(1920, 1080));
+    camera.viewport = FixedResolutionViewport(Vector2(640, 256));
 
-    //Loading in the parallax background
+    // Loading in the parallax background
     ParallaxComponent forestBackground = await loadParallaxComponent([
       ParallaxImageData('background/001_sky.png'),
       ParallaxImageData('background/002_shadow.png'),
@@ -28,15 +32,19 @@ class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
       ParallaxImageData('background/007_trees_back.png'),
       ParallaxImageData('background/008_lights2.png'),
       ParallaxImageData('background/009_trees_front.png'),
-      ParallaxImageData('background/010_grass.png'),
-      ParallaxImageData('background/011_grass_shadow.png'),
       ParallaxImageData('background/012_leaves.png'),
     ],
-        baseVelocity: Vector2(150.0, 0),
+        baseVelocity: Vector2(100.0, 0),
+        
         velocityMultiplierDelta: Vector2(1.1, 1.0));
+
     add(forestBackground);
 
-    //Loading in the player sprite
+    // Adding the ground tiles
+    //List<Platform> groundTiles = Platform.generateGroundTiles(100, size.y);
+    //addAll(groundTiles);
+
+    // Loading in the player 
     player = NeurunnerPlayer();
     add(player);
   }
@@ -45,6 +53,5 @@ class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
   void onTapDown(TapDownInfo info) {
     super.onTapDown(info);
     player.jump();
-    
   }
 }
