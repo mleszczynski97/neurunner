@@ -3,40 +3,56 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:neurunner/game/actors/player.dart';
-import '../actors/platform.dart';
+import 'platform.dart';
 
 class PlatformModule extends Component with HasGameRef {
-  final String platformName;
   late NeurunnerPlayer player;
   late Rect levelBounds;
+  final String platformName;
 
   PlatformModule(this.platformName) : super();
 
   @override
   Future<void>? onLoad() async {
-    // Tiled component
-    final platformModule = await TiledComponent.load(
+    // Loading in the .tmx file with specified name
+    final startModule = await TiledComponent.load(
+      'platform_0.tmx',
+      Vector2.all(16),
+    );
+    final startingModule = await TiledComponent.load(
       platformName,
       Vector2.all(16),
     );
 
+    // Defining the bounds of the level to keep camera in place.
     levelBounds = Rect.fromLTWH(
       0,
       0,
-      (platformModule.tileMap.map.width * platformModule.tileMap.map.tileWidth)
-          .toDouble(),
-      (platformModule.tileMap.map.height *
-              platformModule.tileMap.map.tileHeight)
+      (startingModule.tileMap.map.width * startingModule.tileMap.map.tileWidth)
+              .toDouble() *
+          20,
+      (startingModule.tileMap.map.height *
+              startingModule.tileMap.map.tileHeight)
           .toDouble(),
     );
 
-    await add(platformModule);
-    spawnActors(platformModule.tileMap);
+    await add(startModule);
+    startingModule.position.x = startModule.width;
+    await add(startingModule);
+
+    player = NeurunnerPlayer(position: Vector2(64, 160), size: Vector2(32, 32));
+    add(player);
+
+    spawnPlatforms(startModule.tileMap);
+    //spawnPlatforms(startingModule.tileMap);
+
     setupCamera();
+
     return super.onLoad();
   }
 
-  void spawnActors(RenderableTiledMap tileMap) {
+  // Spawning game Actors from the object layers of the TiledMap
+  void spawnPlatforms(RenderableTiledMap tileMap) {
     final platformsLayer = tileMap.getLayer<ObjectGroup>('Platforms');
 
     for (final platformObject in platformsLayer!.objects) {
@@ -46,33 +62,11 @@ class PlatformModule extends Component with HasGameRef {
       );
       add(platform);
     }
-
-    final spawnPointsLayer = tileMap.getLayer<ObjectGroup>('SpawnPoints');
-
-    for (final spawnPoint in spawnPointsLayer!.objects) {
-      final position = Vector2(spawnPoint.x, spawnPoint.y - spawnPoint.height);
-      final size = Vector2(spawnPoint.width, spawnPoint.height);
-
-      switch (spawnPoint.class_) {
-        case 'Player':
-          player = NeurunnerPlayer(
-            position: position,
-            size: size,
-          );
-          add(player);
-
-          break;
-      }
-    }
   }
 
+  // Method for making the camera follow the Player component
   void setupCamera() {
     gameRef.camera.followComponent(player);
     gameRef.camera.worldBounds = levelBounds;
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
   }
 }

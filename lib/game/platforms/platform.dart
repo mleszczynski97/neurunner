@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
@@ -34,6 +32,4 @@ class Platform extends PositionComponent with CollisionCallbacks {
     super.update(dt);
     //position.x -= 50 * dt;
   }
-
-
 }

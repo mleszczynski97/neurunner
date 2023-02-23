@@ -5,8 +5,9 @@ const double gravity = 1000;
 
 class NeurunnerPlayer extends SpriteAnimationComponent
     with HasGameRef<NeurunnerGame> {
-  double velocityY = 0.0;
+  
   int jumpCount = 0;
+  double velocityY = 0.0;
 
   NeurunnerPlayer({
     required Vector2 position,
@@ -27,7 +28,6 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         stepTime: 0.1,
       ),
     );
-    
   }
 
   @override
@@ -61,18 +61,6 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     return (position.y <= 0);
   }
 
-  //
-  void run() {
-    // animation = SpriteAnimation.fromFrameData(
-    //   game.images.fromCache('player/run.png'),
-    //   SpriteAnimationData.sequenced(
-    //     amount: 8,
-    //     textureSize: Vector2(80, 80),
-    //     stepTime: 0.1,
-    //   ),
-    // );
-  }
-
   //Jump method, called when user taps on the screen
   void jump() {
     if (isOnGround()) {
@@ -87,7 +75,4 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       jumpCount += 1;
     }
   }
-
-  //
-  void hit() {}
 }
