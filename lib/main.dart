@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             // GameOver.id: (context, game) => GameOver(gameRef: game),
             // Settings.id: (context, game) => Settings(gameRef: game),
           },
-          //initialActiveOverlays: const [MainMenu.id],
+          initialActiveOverlays: const [MainMenu.id],
         ),
       ),
     );

@@ -21,6 +21,7 @@ class MainMenu extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   gameRef.overlays.remove(id);
+                  gameRef.resumeEngine();
                   // gameRef.add(GamePlay());
                 },
                 style: ElevatedButton.styleFrom(
@@ -40,6 +41,27 @@ class MainMenu extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   gameRef.overlays.remove(id);
+                  gameRef.resumeEngine();
+                  // gameRef.overlays.add(Settings.id);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey, // Change the button color
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text('HIGHSCORES'),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 50,
+              width: 250,
+              child: ElevatedButton(
+                onPressed: () {
+                  gameRef.overlays.remove(id);
+                  gameRef.resumeEngine();
                   // gameRef.overlays.add(Settings.id);
                 },
                 style: ElevatedButton.styleFrom(

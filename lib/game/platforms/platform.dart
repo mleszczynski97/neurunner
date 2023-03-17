@@ -2,7 +2,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
 // Represents a platform in the game world.
-class Platform extends PositionComponent with CollisionCallbacks {
+class Platform extends PositionComponent with CollisionCallbacks, HasGameRef {
   Platform({
     required Vector2 position,
     required Vector2 size,
@@ -17,19 +17,21 @@ class Platform extends PositionComponent with CollisionCallbacks {
           angle: angle,
           anchor: anchor,
         ) {
-    debugMode = true;
+    //debugMode = true;
   }
 
   @override
   Future<void> onLoad() async {
-    // Passive, because we don't want platforms to
-    // collide with each other.
+    // Passive, because we don't want platforms to collide with each other.
     await add(RectangleHitbox()..collisionType = CollisionType.passive);
   }
 
   @override
-  void update(double dt) {
+  void update(double dt) { 
+    if ( gameRef.camera.position.x > position.x + size.x) {
+      removeFromParent();
+      //print('platform removed');
+    }
     super.update(dt);
-    //position.x -= 50 * dt;
   }
 }

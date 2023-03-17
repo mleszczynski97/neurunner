@@ -1,3 +1,6 @@
+import 'dart:math';
+import 'dart:ui';
+
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
@@ -10,8 +13,10 @@ import 'actors/player.dart';
 class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
   NeurunnerGame();
   late NeurunnerPlayer player;
-  PlatformModule? currentPlatform;
+  late Rect levelBounds;
+  PlatformModule? currentPlatform, nextPlatform;
   List<String> platformModules = [];
+  int moduleCounter = 0;
 
   @override
   Future<void> onLoad() async {
@@ -29,6 +34,10 @@ class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
     platformModules = [
       'platform_0.tmx',
       'platform_1.tmx',
+      'platform_2.tmx',
+      'platform_3.tmx',
+      'platform_4.tmx',
+      'platform_5.tmx',
     ];
 
     // Loading in the parallax background
@@ -48,24 +57,55 @@ class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
         size: Vector2(640, 256),
         velocityMultiplierDelta: Vector2(1.1, 1.0));
 
+    // Adding the background component
     add(forestBackground);
 
     // Adding an initial platform segment
-    for (var platformModule in platformModules) {
-      loadPlatformModule(platformModule);
-    }
+    loadPlatformModule(platformModules.elementAt(0));
 
-    // Loading in the player
-    player = NeurunnerPlayer(position: Vector2.zero(), size: Vector2.zero());
+    // Loading in the player and setting up the camera
+    player = NeurunnerPlayer(position: Vector2(64, 50), size: Vector2(32, 32));
     add(player);
+    setupCamera();
 
     return super.onLoad();
   }
 
+  @override
+  void update(dt) {
+    if (overlays.isActive('MainMenu')) {
+      pauseEngine();  
+    }
+
+    if (player.position.x > 800 * moduleCounter - 400) {
+      var platformIndex = Random().nextInt(platformModules.length - 1) + 1;
+      loadPlatformModule(platformModules.elementAt(platformIndex));
+    }
+    super.update(dt);
+  }
+
+  //Calling the jump method of the player class when the screen is tapped
+  @override
+  void onTapDown(TapDownInfo info) {
+    super.onTapDown(info);
+    //if (info.raw.globalPosition.dx < size.x) {
+    player.jump();
+    //} else if (info.raw.globalPosition.dx > size.x) {
+    //player.attack();
+    //}
+  }
 
   void loadPlatformModule(String platformName) async {
-    currentPlatform?.removeFromParent();
-    currentPlatform = PlatformModule(platformName);
+    //currentPlatform?.removeFromParent();
+    currentPlatform = PlatformModule(platformName, moduleCounter);
     add(currentPlatform!);
+    moduleCounter++;
+  }
+
+  // Method for making the camera follow the Player component
+  void setupCamera() {
+    levelBounds = const Rect.fromLTWH(0, 0, 800 * 200000, 256);
+    camera.followComponent(player);
+    camera.worldBounds = levelBounds;
   }
 }

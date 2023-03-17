@@ -1,13 +1,17 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:neurunner/game/game.dart';
+import 'package:neurunner/game/platforms/platform.dart';
 
-const double gravity = 1000;
+const double gravity = 8;
 
 class NeurunnerPlayer extends SpriteAnimationComponent
-    with HasGameRef<NeurunnerGame> {
-  
+    with CollisionCallbacks, HasGameRef<NeurunnerGame> {
   int jumpCount = 0;
-  double velocityY = 0.0;
+  double velocityY = 150.0;
+  double velocityX = 100.0;
+  bool _isOnGround = false;
+  final Vector2 _up = Vector2(0, -1);
 
   NeurunnerPlayer({
     required Vector2 position,
@@ -16,15 +20,20 @@ class NeurunnerPlayer extends SpriteAnimationComponent
           position: position,
           size: size,
           anchor: Anchor.topCenter,
-        );
+          priority: 1,
+        ) {
+    //debugMode = true;
+  }
 
   @override
   Future<void> onLoad() async {
+    add(CircleHitbox());
+
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache('player/run.png'),
       SpriteAnimationData.sequenced(
         amount: 8,
-        textureSize: Vector2(80, 80),
+        textureSize: Vector2(80, 64),
         stepTime: 0.1,
       ),
     );
@@ -34,43 +43,71 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
     // v = u + at
-    velocityY += gravity * dt;
+    if (!_isOnGround) {
+      velocityY += gravity;
+    }
+
+    velocityY = velocityY.clamp(-400, 200);
+    velocityX *= 1.000001;
 
     // d = d0 + v * t
     position.y += velocityY * dt;
 
-    position.x += 50 * dt;
+    position.x += velocityX * dt;
+  }
 
-    if (isOnGround()) {
-      position.y = (gameRef.size.y - gameRef.size.y / 9 - gameRef.size.y / 10);
-      velocityY = 0;
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is Platform) {
+      if (intersectionPoints.length == 2) {
+        // Calculate the collision normal and separation distance.
+        final mid = (intersectionPoints.elementAt(0) +
+                intersectionPoints.elementAt(1)) /
+            2;
+
+        final collisionNormal = absoluteCenter - mid;
+        final separationDistance = (size.x / 2) - collisionNormal.length;
+        collisionNormal.normalize();
+
+        // If collision normal is almost upwards,
+        // player must be on ground.
+        if (_up.dot(collisionNormal) > 0.8) {
+          _isOnGround = true;
+        }
+
+        // Resolve collision by moving player along
+        // collision normal by separation distance.
+        position += collisionNormal.scaled(separationDistance);
+        velocityY = 0;
+      }
     }
 
-    if (isMaxHeight()) {
+    if (other is ScreenHitbox) {
       position.y = 0;
-      velocityY = 0;
     }
+
+    super.onCollision(intersectionPoints, other);
   }
 
-  bool isOnGround() {
-    return (position.y >=
-        (gameRef.size.y - gameRef.size.y / 9 - gameRef.size.y / 10));
-  }
-
-  bool isMaxHeight() {
-    return (position.y <= 0);
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    if (other is Platform) {
+      _isOnGround = false;
+    }
+    super.onCollisionEnd(other);
   }
 
   //Jump method, called when user taps on the screen
   void jump() {
-    if (isOnGround()) {
+    if (_isOnGround) {
       // First jump
-      velocityY = -400;
+      velocityY = -350;
       // Set jump count to 1 on first jump
       jumpCount = 1;
+      _isOnGround = false;
     } else if (jumpCount < 2) {
       // Allow double jump if jump count is less than 2
-      velocityY = -350;
+      velocityY = -300;
       // Increment jump count on second jump
       jumpCount += 1;
     }
