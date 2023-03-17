@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
-import 'platform.dart';
+import '../components/platform.dart';
 
 class PlatformModule extends PositionComponent with HasGameRef{
   final String platformName;
@@ -33,7 +33,7 @@ class PlatformModule extends PositionComponent with HasGameRef{
     super.update(dt);
   }
 
-  // Spawning game Actors from the object layers of the TiledMap
+  // Spawning game components from the object layers of the tmx map
   void spawnPlatforms(RenderableTiledMap tileMap) {
     final platformsLayer = tileMap.getLayer<ObjectGroup>('Platforms');
 

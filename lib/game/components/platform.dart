@@ -16,6 +16,7 @@ class Platform extends PositionComponent with CollisionCallbacks, HasGameRef {
           scale: scale,
           angle: angle,
           anchor: anchor,
+          priority: priority,
         ) {
     //debugMode = true;
   }
@@ -27,8 +28,8 @@ class Platform extends PositionComponent with CollisionCallbacks, HasGameRef {
   }
 
   @override
-  void update(double dt) { 
-    if ( gameRef.camera.position.x > position.x + size.x) {
+  void update(double dt) {
+    if (gameRef.camera.position.x > position.x + size.x) {
       removeFromParent();
       //print('platform removed');
     }

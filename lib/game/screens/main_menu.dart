@@ -21,6 +21,7 @@ class MainMenu extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   gameRef.overlays.remove(id);
+                  
                   gameRef.resumeEngine();
                   // gameRef.add(GamePlay());
                 },

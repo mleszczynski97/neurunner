@@ -1,7 +1,7 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:neurunner/game/game.dart';
-import 'package:neurunner/game/platforms/platform.dart';
+import 'package:neurunner/game/components/platform.dart';
 
 const double gravity = 8;
 
@@ -11,11 +11,12 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   double velocityY = 150.0;
   double velocityX = 100.0;
   bool _isOnGround = false;
+  bool _canJump = true;
   final Vector2 _up = Vector2(0, -1);
 
   NeurunnerPlayer({
     required Vector2 position,
-    required Vector2 size,
+    Vector2? size,
   }) : super(
           position: position,
           size: size,
@@ -37,6 +38,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         stepTime: 0.1,
       ),
     );
+    size = Vector2.all(32);
   }
 
   @override
@@ -48,12 +50,14 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     }
 
     velocityY = velocityY.clamp(-400, 200);
-    velocityX *= 1.000001;
+    velocityX *= 1.00001;
 
     // d = d0 + v * t
     position.y += velocityY * dt;
 
-    position.x += velocityX * dt;
+    if (position.y < gameRef.size.y - 16) {
+      position.x += velocityX * dt;
+    }
   }
 
   @override
@@ -71,8 +75,10 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
         // If collision normal is almost upwards,
         // player must be on ground.
-        if (_up.dot(collisionNormal) > 0.8) {
+        if (_up.dot(collisionNormal) > 0.9) {
           _isOnGround = true;
+        } else {
+          _isOnGround = false;
         }
 
         // Resolve collision by moving player along
@@ -81,11 +87,6 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         velocityY = 0;
       }
     }
-
-    if (other is ScreenHitbox) {
-      position.y = 0;
-    }
-
     super.onCollision(intersectionPoints, other);
   }
 
@@ -102,14 +103,12 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     if (_isOnGround) {
       // First jump
       velocityY = -350;
-      // Set jump count to 1 on first jump
-      jumpCount = 1;
-      _isOnGround = false;
-    } else if (jumpCount < 2) {
-      // Allow double jump if jump count is less than 2
+      _canJump = true;
+
+    } else if (_canJump) {
+      // Allow double jump 
       velocityY = -300;
-      // Increment jump count on second jump
-      jumpCount += 1;
+      _canJump = false;
     }
   }
 }

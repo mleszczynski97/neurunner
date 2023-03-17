@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:neurunner/game/game.dart';
 
-import 'game/overlays/main_menu.dart';
+import 'game/screens/main_menu.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
