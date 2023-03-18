@@ -3,16 +3,16 @@ import 'package:flame/components.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/components/platform.dart';
 
-const double gravity = 8;
+const double gravity = 15;
 
 class NeurunnerPlayer extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
-  int jumpCount = 0;
-  double velocityY = 150.0;
+  double velocityY = 0.0;
   double velocityX = 100.0;
   bool _isOnGround = false;
   bool _canJump = true;
   final Vector2 _up = Vector2(0, -1);
+  double elapsedTime = 0.0;
 
   NeurunnerPlayer({
     required Vector2 position,
@@ -45,18 +45,26 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
     // v = u + at
-    if (!_isOnGround) {
-      velocityY += gravity;
-    }
 
-    velocityY = velocityY.clamp(-400, 200);
-    velocityX *= 1.00001;
+    velocityY += gravity;
+
+    velocityY = velocityY.clamp(-400, 250);
+    velocityX *= 1.0001;
 
     // d = d0 + v * t
     position.y += velocityY * dt;
 
-    if (position.y < gameRef.size.y - 16) {
-      position.x += velocityX * dt;
+    position.x += velocityX * dt;
+
+    elapsedTime += dt;
+    if (elapsedTime > (1 / 6)) {
+      elapsedTime = 0.0;
+      gameRef.playerData.points.value = position.x ~/ 10;
+    }
+
+    if (position.y > gameRef.size.y) {
+      gameRef.playerData.hp.value = 0;
+      gameRef.pauseEngine();
     }
   }
 
@@ -77,14 +85,14 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         // player must be on ground.
         if (_up.dot(collisionNormal) > 0.9) {
           _isOnGround = true;
-        } else {
-          _isOnGround = false;
         }
 
         // Resolve collision by moving player along
         // collision normal by separation distance.
         position += collisionNormal.scaled(separationDistance);
         velocityY = 0;
+      } else {
+        _isOnGround = false;
       }
     }
     super.onCollision(intersectionPoints, other);
@@ -92,9 +100,10 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
   @override
   void onCollisionEnd(PositionComponent other) {
-    if (other is Platform) {
-      _isOnGround = false;
-    }
+    // if (other is Platform) {
+    //    _isOnGround = false;
+    //  print(_isOnGround);
+    // }
     super.onCollisionEnd(other);
   }
 
@@ -102,12 +111,12 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   void jump() {
     if (_isOnGround) {
       // First jump
-      velocityY = -350;
+      velocityY = -400;
+      _isOnGround = false;
       _canJump = true;
-
     } else if (_canJump) {
-      // Allow double jump 
-      velocityY = -300;
+      // Allow double jump
+      velocityY = -350;
       _canJump = false;
     }
   }

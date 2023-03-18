@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:neurunner/game/screens/main_menu.dart';
 import '../game.dart';
 
-class MainMenu extends StatelessWidget {
-  static const id = 'MainMenu';
+class PauseMenu extends StatelessWidget {
+  static const id = 'PauseMenu';
   final NeurunnerGame gameRef;
 
-  const MainMenu({super.key, required this.gameRef});
+  const PauseMenu({super.key, required this.gameRef});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey.withOpacity(0.2),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -21,7 +22,6 @@ class MainMenu extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   gameRef.overlays.remove(id);
-                  //gameRef.initializeGame();
                   gameRef.resumeEngine();
                   // gameRef.add(GamePlay());
                 },
@@ -32,7 +32,7 @@ class MainMenu extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: const Text('PLAY'),
+                child: const Text('RESUME'),
               ),
             ),
             const SizedBox(height: 16),
@@ -42,7 +42,8 @@ class MainMenu extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   gameRef.overlays.remove(id);
-                  gameRef.resumeEngine();
+                  gameRef.removeAll(gameRef.children);
+                  gameRef.overlays.add(MainMenu.id);
                   // gameRef.overlays.add(Settings.id);
                 },
                 style: ElevatedButton.styleFrom(
@@ -52,27 +53,7 @@ class MainMenu extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: const Text('HIGHSCORES'),
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              height: 50,
-              width: 250,
-              child: ElevatedButton(
-                onPressed: () {
-                  gameRef.overlays.remove(id);
-                  gameRef.resumeEngine();
-                  // gameRef.overlays.add(Settings.id);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey, // Change the button color
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text('SETTINGS'),
+                child: const Text('EXIT'),
               ),
             )
           ],

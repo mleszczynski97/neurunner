@@ -24,4 +24,5 @@ flutter:
     - assets/images/enemies/
     - assets/images/player/
     - assets/images/platforms/
+    - assets/images/hud/
     - assets/tiles/

@@ -1,23 +1,22 @@
 import 'dart:math';
-import 'dart:ui';
 import 'game_constants.dart' as constants;
-
+import 'package:neurunner/game/models/player_data.dart';
 import 'package:flame/components.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
-import 'package:flame/input.dart';
 import 'package:flame/parallax.dart';
 import 'package:neurunner/game/managers/tmx_module_manager.dart';
-
 import 'components/player.dart';
+import 'hud/hud.dart';
 
-class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
+class NeurunnerGame extends FlameGame with HasCollisionDetection, HasTappables {
   NeurunnerGame();
-  NeurunnerPlayer player = NeurunnerPlayer(position: constants.initPosition);
+  late NeurunnerPlayer player;
   PlatformModule? currentPlatform, nextPlatform;
   late ParallaxComponent forestBackground;
   List<String> platformModules = [];
   int moduleCounter = 0;
+  final playerData = PlayerData();
 
   @override
   Future<void> onLoad() async {
@@ -46,21 +45,25 @@ class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
   }
 
   //Calling the jump method of the player class when the screen is tapped
-  @override
-  void onTapDown(TapDownInfo info) {
-    super.onTapDown(info);
-    //if (info.raw.globalPosition.dx < size.x) {
-    player.jump();
-    //} else if (info.raw.globalPosition.dx > size.x) {
-    //player.attack();
-    //}
-  }
+  // @override
+  // void onTapDown(TapDownInfo info) {
+  //   super.onTapDown(info);
+  //   //if (info.raw.globalPosition.dx < size.x) {
+  //   player.jump();
+  //   //} else if (info.raw.globalPosition.dx > size.x) {
+  //   //player.attack();
+  //   //}
+  // }
 
   // Setting the initial state of the game
   Future<void> initializeGame() async {
     // Loading in the image assets
     await images.loadAll([
       'player/run.png',
+      'hud/heart.png',
+      'hud/jump.png',
+      'hud/attack.png',
+      'hud/pause.png',
     ]);
 
     // List of all platform modules
@@ -96,7 +99,10 @@ class NeurunnerGame extends FlameGame with TapDetector, HasCollisionDetection {
     // Adding an initial platform segment
     loadPlatformModule(platformModules.elementAt(0));
 
+    add(Hud(priority: 1));
+
     // Loading in the player and setting up the camera
+    player = NeurunnerPlayer(position: constants.initPosition);
     add(player);
     setupCamera();
   }
