@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:neurunner/game/hud/hud.dart';
+import 'package:neurunner/game/gameplay.dart';
 import 'package:neurunner/game/screens/main_menu.dart';
 import '../game.dart';
 
-class PauseMenu extends StatelessWidget {
-  static const id = 'PauseMenu';
+class GameOver extends StatelessWidget {
+  static const id = 'GameOver';
   final NeurunnerGame gameRef;
 
-  const PauseMenu({super.key, required this.gameRef});
+  const GameOver({super.key, required this.gameRef});
 
   @override
   Widget build(BuildContext context) {
@@ -15,23 +15,32 @@ class PauseMenu extends StatelessWidget {
       backgroundColor: Colors.grey.withOpacity(0.3),
       body: Center(
         child: Container(
-          height: 160,
-          width: 280,
+          height: double.infinity,
+          width: double.infinity,
           decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15.0),
-          color: const Color.fromARGB(255, 80, 79, 77),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black26,
-              spreadRadius: 2.0,
-              blurRadius: 2.0,
-              offset: Offset(4, 4),
-            )
-          ],
-        ),
+            borderRadius: BorderRadius.circular(15.0),
+            color: const Color.fromARGB(255, 80, 79, 77),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black26,
+                spreadRadius: 2.0,
+                blurRadius: 2.0,
+                offset: Offset(4, 4),
+              )
+            ],
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Text('Game Over!',
+                  style: TextStyle(
+                    fontSize: 64,
+                  )),
+               Text('Final score: ${gameRef.playerData.points.value}',
+                  style: const TextStyle(
+                    fontSize: 32,
+                  )),
+              const SizedBox(height: 16),
               SizedBox(
                 height: 50,
                 width: 150,
@@ -39,6 +48,8 @@ class PauseMenu extends StatelessWidget {
                   onPressed: () {
                     gameRef.overlays.remove(id);
                     gameRef.resumeEngine();
+                    gameRef.removeAll(gameRef.children);
+                    gameRef.add(GamePlay());
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey, // Change the button color
@@ -47,10 +58,10 @@ class PauseMenu extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text('RESUME'),
+                  child: const Text('RESTART'),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 120),
               SizedBox(
                 height: 50,
                 width: 150,
@@ -67,7 +78,7 @@ class PauseMenu extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: const Text('EXIT'),
+                  child: const Text('EXIT TO MENU'),
                 ),
               )
             ],

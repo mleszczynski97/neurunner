@@ -48,7 +48,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
     velocityY += gravity;
 
-    velocityY = velocityY.clamp(-400, 250);
+    velocityY = velocityY.clamp(-400, 300);
     velocityX *= 1.0001;
 
     // d = d0 + v * t
@@ -64,7 +64,6 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
     if (position.y > gameRef.size.y) {
       gameRef.playerData.hp.value = 0;
-      gameRef.pauseEngine();
     }
   }
 
@@ -111,12 +110,12 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   void jump() {
     if (_isOnGround) {
       // First jump
-      velocityY = -400;
+      velocityY = -350;
       _isOnGround = false;
       _canJump = true;
     } else if (_canJump) {
       // Allow double jump
-      velocityY = -350;
+      velocityY = -300;
       _canJump = false;
     }
   }

@@ -1,8 +1,11 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:neurunner/game/game.dart';
+import 'package:neurunner/game/game_constants.dart' as constants;
 
 // Represents a platform in the game world.
-class Platform extends PositionComponent with CollisionCallbacks, HasGameRef {
+class Platform extends PositionComponent
+    with CollisionCallbacks, HasGameRef<NeurunnerGame> {
   Platform({
     required Vector2 position,
     required Vector2 size,
@@ -29,7 +32,7 @@ class Platform extends PositionComponent with CollisionCallbacks, HasGameRef {
 
   @override
   void update(double dt) {
-    if (gameRef.camera.position.x > position.x + size.x) {
+    if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
       //print('platform removed');
     }

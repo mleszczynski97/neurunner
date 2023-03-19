@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../game.dart';
+import '../gameplay.dart';
 
 class MainMenu extends StatelessWidget {
   static const id = 'MainMenu';
@@ -10,7 +11,7 @@ class MainMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 80, 79, 77),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -21,9 +22,7 @@ class MainMenu extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   gameRef.overlays.remove(id);
-                  //gameRef.initializeGame();
-                  gameRef.resumeEngine();
-                  // gameRef.add(GamePlay());
+                  gameRef.add(GamePlay());
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey, // Change the button color
@@ -42,7 +41,7 @@ class MainMenu extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   gameRef.overlays.remove(id);
-                  gameRef.resumeEngine();
+                  gameRef.add(GamePlay());
                   // gameRef.overlays.add(Settings.id);
                 },
                 style: ElevatedButton.styleFrom(
@@ -62,7 +61,7 @@ class MainMenu extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   gameRef.overlays.remove(id);
-                  gameRef.resumeEngine();
+                  gameRef.add(GamePlay());
                   // gameRef.overlays.add(Settings.id);
                 },
                 style: ElevatedButton.styleFrom(

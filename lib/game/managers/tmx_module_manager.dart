@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:neurunner/game/game.dart';
 import '../components/platform.dart';
+import 'package:neurunner/game/game_constants.dart' as constants;
 
-class PlatformModule extends PositionComponent with HasGameRef{
+class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
   final String platformName;
   int moduleCounter;
+  final double moduleWidth = 800.0;
 
   PlatformModule(this.platformName, this.moduleCounter) : super();
 
@@ -17,7 +20,7 @@ class PlatformModule extends PositionComponent with HasGameRef{
       Vector2.all(16),
     );
 
-    platformModule.position.x = 800.0 * moduleCounter;
+    platformModule.position.x = moduleWidth * moduleCounter;
     await add(platformModule);
 
     spawnPlatforms(platformModule.tileMap);
@@ -27,8 +30,12 @@ class PlatformModule extends PositionComponent with HasGameRef{
 
   @override
   void update(double dt) {
-    if (gameRef.camera.position.x > 800 * moduleCounter + 800) {
+    if (gameRef.player.x >
+        moduleWidth * moduleCounter +
+            moduleWidth +
+            constants.viewportWidth / 2) {
       removeFromParent();
+      //print('Module removed');
     }
     super.update(dt);
   }
@@ -41,7 +48,7 @@ class PlatformModule extends PositionComponent with HasGameRef{
       platformObject.visible = true;
       final platform = Platform(
         position:
-            Vector2(platformObject.x + (moduleCounter * 800), platformObject.y),
+            Vector2(platformObject.x + (moduleCounter * moduleWidth), platformObject.y),
         size: Vector2(platformObject.width, platformObject.height),
       );
       add(platform);

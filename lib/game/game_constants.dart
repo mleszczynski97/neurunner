@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 // Platform module and level bounds dimensions
 const double moduleHeight = 256.0;
 const double moduleWidth = 800.0;
+const double viewportWidth = 640;
 const int moduleMax = 100000;
 const Rect levelBounds =
     Rect.fromLTWH(0, 0, moduleWidth * moduleMax, moduleHeight);

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:neurunner/game/game.dart';
 
+import 'game/screens/game_over.dart';
 import 'game/screens/main_menu.dart';
 import 'game/screens/pause_menu.dart';
 
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
           overlayBuilderMap: {
             MainMenu.id: (context, game) => MainMenu(gameRef: game),
             PauseMenu.id: (context, game) => PauseMenu(gameRef: game),
-            // GameOver.id: (context, game) => GameOver(gameRef: game),
+            GameOver.id: (context, game) => GameOver(gameRef: game),
             // Settings.id: (context, game) => Settings(gameRef: game),
           },
           initialActiveOverlays: const [MainMenu.id],
