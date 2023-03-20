@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
 import 'package:neurunner/game/game.dart';
+import 'package:neurunner/game/managers/audio_manager.dart';
 import 'package:neurunner/game/screens/game_over.dart';
 import 'package:neurunner/game/screens/pause_menu.dart';
 
@@ -62,7 +63,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     final jumpButtonComponent = SpriteButtonComponent(
       onPressed: () {
         gameRef.player.jump();
-        //print('pressed');
+        AudioManager.playSfx('Jump_8.wav');
       },
       button: Sprite(game.images.fromCache('hud/jump.png')),
       position: Vector2(10, 256),
@@ -94,11 +95,6 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     gameRef.playerData.points.removeListener(onPointsChange);
     gameRef.playerData.hp.removeListener(onHpChange);
     super.onRemove();
-  }
-
-  @override
-  void update(double dt) {
-    super.update(dt);
   }
 
   void onPointsChange() {

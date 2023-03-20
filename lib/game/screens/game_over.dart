@@ -40,7 +40,7 @@ class GameOver extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 32,
                   )),
-              const SizedBox(height: 16),
+              const SizedBox(height: 160),
               SizedBox(
                 height: 50,
                 width: 150,
@@ -61,7 +61,7 @@ class GameOver extends StatelessWidget {
                   child: const Text('RESTART'),
                 ),
               ),
-              const SizedBox(height: 120),
+              const SizedBox(height: 16),
               SizedBox(
                 height: 50,
                 width: 150,

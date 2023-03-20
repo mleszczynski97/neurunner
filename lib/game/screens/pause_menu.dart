@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neurunner/game/hud/hud.dart';
 import 'package:neurunner/game/screens/main_menu.dart';
 import '../game.dart';
 
