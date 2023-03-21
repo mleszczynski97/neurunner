@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:neurunner/game/game.dart';
-import '../components/platform.dart';
+import 'package:neurunner/game/components/platform.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
 
 class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
   final String platformName;
-  int moduleCounter;
+  final int moduleCounter;
   final double moduleWidth = 800.0;
 
   PlatformModule(this.platformName, this.moduleCounter) : super();

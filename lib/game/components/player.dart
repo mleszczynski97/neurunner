@@ -3,6 +3,8 @@ import 'package:flame/components.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/components/platform.dart';
 
+import '../managers/audio_manager.dart';
+
 const double gravity = 15;
 
 class NeurunnerPlayer extends SpriteAnimationComponent
@@ -57,7 +59,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     position.x += velocityX * dt;
 
     elapsedTime += dt;
-    if (elapsedTime > (1 / 6)) {
+    if (elapsedTime > (1 / 60)) {
       elapsedTime = 0.0;
       gameRef.playerData.points.value = position.x ~/ 10;
     }
@@ -113,10 +115,12 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       velocityY = -350;
       _isOnGround = false;
       _canJump = true;
+      AudioManager.playSfx('Jump_17.wav');
     } else if (_canJump) {
       // Allow double jump
       velocityY = -300;
       _canJump = false;
+      AudioManager.playSfx('Jump_8.wav');
     }
   }
 }

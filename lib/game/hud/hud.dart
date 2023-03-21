@@ -9,6 +9,11 @@ import 'package:neurunner/game/screens/pause_menu.dart';
 class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   late final TextComponent pointsTextComponent;
   late final TextComponent healthTextComponent;
+  late final TextComponent scoreTextComponent;
+  late final SpriteComponent heartComponent;
+  late final SpriteButtonComponent pauseButtonComponent;
+  late final SpriteButtonComponent attackButtonComponent;
+  late final SpriteButtonComponent jumpButtonComponent;
 
   Hud({super.children, super.priority}) {
     positionType = PositionType.viewport;
@@ -16,7 +21,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   @override
   FutureOr<void> onLoad() async {
-    final scoreTextComponent = TextComponent(
+    scoreTextComponent = TextComponent(
       text: 'SCORE',
       position: Vector2(320, 0),
       anchor: Anchor.topCenter,
@@ -32,8 +37,9 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     );
     add(pointsTextComponent);
 
-    final pauseButtonComponent = SpriteButtonComponent(
+    pauseButtonComponent = SpriteButtonComponent(
       onPressed: () {
+        AudioManager.pauseBgm();
         gameRef.pauseEngine();
         gameRef.overlays.add(PauseMenu.id);
       },
@@ -44,7 +50,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     )..positionType = PositionType.viewport;
     add(pauseButtonComponent);
 
-    final heartComponent = SpriteComponent.fromImage(
+    heartComponent = SpriteComponent.fromImage(
       game.images.fromCache('hud/heart.png'),
       position: Vector2(0, 0),
       anchor: Anchor.topLeft,
@@ -60,10 +66,9 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     );
     add(healthTextComponent);
 
-    final jumpButtonComponent = SpriteButtonComponent(
+    jumpButtonComponent = SpriteButtonComponent(
       onPressed: () {
         gameRef.player.jump();
-        AudioManager.playSfx('Jump_8.wav');
       },
       button: Sprite(game.images.fromCache('hud/jump.png')),
       position: Vector2(10, 256),
@@ -72,7 +77,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     )..positionType = PositionType.viewport;
     add(jumpButtonComponent);
 
-    final attackButtonComponent = SpriteButtonComponent(
+    attackButtonComponent = SpriteButtonComponent(
       onPressed: () {
         //print('attack!');
       },
@@ -105,6 +110,16 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     healthTextComponent.text = '${gameRef.playerData.hp.value}';
 
     if (gameRef.playerData.hp.value == 0) {
+      removeAll([
+        pointsTextComponent,
+        scoreTextComponent,
+        // healthTextComponent,
+        // heartComponent,
+        pauseButtonComponent,
+        attackButtonComponent,
+        jumpButtonComponent,
+      ]);
+      AudioManager.stopBgm();      
       gameRef.pauseEngine();
       gameRef.overlays.add(GameOver.id);
     }

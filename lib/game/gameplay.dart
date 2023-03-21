@@ -1,8 +1,8 @@
 import 'dart:math';
-
 import 'package:flame/components.dart';
 import 'package:flame/parallax.dart';
 import 'package:neurunner/game/game.dart';
+import 'package:neurunner/game/managers/audio_manager.dart';
 import 'game_constants.dart' as constants;
 import 'components/player.dart';
 import 'hud/hud.dart';
@@ -19,6 +19,7 @@ class GamePlay extends Component
 
   @override
   Future<void> onLoad() async {
+    AudioManager.playBgm('Glorious_morning.mp3');
     await initializeGame();
     gameRef.add(hud);
     gameRef.playerData.hp.value = 100;
@@ -87,7 +88,6 @@ class GamePlay extends Component
 
   @override
   void update(dt) {
-
     if (gameRef.player.position.x >
         constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
       var platformIndex = Random().nextInt(platformModules.length - 1) + 1;
