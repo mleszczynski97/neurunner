@@ -7,6 +7,7 @@ import 'game_constants.dart' as constants;
 import 'components/player.dart';
 import 'hud/hud.dart';
 import 'managers/tmx_module_manager.dart';
+import 'models/tiled_data.dart';
 
 class GamePlay extends Component
     with HasGameRef<NeurunnerGame>, ParentIsA<NeurunnerGame> {
@@ -14,7 +15,6 @@ class GamePlay extends Component
   PlatformModule? currentPlatform;
   late ParallaxComponent forestBackground;
   final hud = Hud(priority: 1);
-  List<String> platformModules = [];
   int moduleCounter = 0;
 
   @override
@@ -39,14 +39,7 @@ class GamePlay extends Component
     ]);
 
     // List of all platform modules
-    platformModules = [
-      'platform_0.tmx',
-      'platform_1.tmx',
-      'platform_2.tmx',
-      'platform_3.tmx',
-      'platform_4.tmx',
-      'platform_5.tmx',
-    ];
+    
 
     // Loading in the parallax background
     ParallaxComponent forestBackground = await gameRef.loadParallaxComponent(
@@ -77,7 +70,7 @@ class GamePlay extends Component
     setupCamera();
 
     // Adding an initial platform segment
-    loadPlatformModule(platformModules.elementAt(0));
+    loadPlatformModule(platformModules1.elementAt(0));
   }
 
   @override
@@ -104,31 +97,31 @@ class GamePlay extends Component
       case 0:
         {
           // First level
-          loadPlatformModule(platformModules.elementAt(index));
+          loadPlatformModule(platformModules1.elementAt(index));
         }
         break;
       case 1:
         {
           // Second level
-          loadPlatformModule(platformModules.elementAt(index));
+          loadPlatformModule(platformModules2.elementAt(index));
         }
         break;
       case 2:
         {
           // Third level
-          loadPlatformModule(platformModules.elementAt(index));
+          loadPlatformModule(platformModules3.elementAt(index));
         }
         break;
       case 3:
         {
           // Fourth level
-          loadPlatformModule(platformModules.elementAt(index));
+          loadPlatformModule(platformModules4.elementAt(index));
         }
         break;
       case 4:
         {
           // Fifth level
-          loadPlatformModule(platformModules.elementAt(index));
+          loadPlatformModule(platformModules5.elementAt(index));
         }
         break;
       default:
