@@ -4,13 +4,14 @@ import 'package:flame_audio/flame_audio.dart';
 class AudioManager {
   static final sfx = ValueNotifier(true);
   static final bgm = ValueNotifier(true);
-  static final sfxVolume = ValueNotifier(0.2);
+  static final sfxVolume = ValueNotifier(0.5);
   static final bgmVolume = ValueNotifier(0.5);
 
   static Future<void> init() async {
     FlameAudio.bgm.initialize();
     await FlameAudio.audioCache.loadAll([
       'Jump_8.wav',
+      'Click_12.wav',
       'Glorious_morning.mp3',
     ]);
   }

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:neurunner/game/managers/audio_manager.dart';
+import 'package:neurunner/game/screens/highscores_menu.dart';
 import 'package:neurunner/game/screens/settings_menu.dart';
-import '../game.dart';
-import '../gameplay.dart';
+import 'package:neurunner/game/game.dart';
+import 'package:neurunner/game/gameplay.dart';
 
 class MainMenu extends StatelessWidget {
   static const id = 'MainMenu';
@@ -17,23 +19,24 @@ class MainMenu extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-             const Padding(
-                padding: EdgeInsets.all(16),
-                child: Text(
-                  "NEURUNNER",
-                  style: TextStyle(
-                    //color: Color.fromARGB(255, 169, 94, 238),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50,
-                  ),
+            const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                "NEURUNNER",
+                style: TextStyle(
+                  //color: Color.fromARGB(255, 169, 94, 238),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50,
                 ),
               ),
+            ),
             const SizedBox(height: 50),
             SizedBox(
               height: 50,
               width: 250,
               child: ElevatedButton(
                 onPressed: () {
+                  AudioManager.playSfx('Click_12.wav');
                   gameRef.overlays.remove(id);
                   gameRef.add(GamePlay());
                 },
@@ -53,8 +56,9 @@ class MainMenu extends StatelessWidget {
               width: 250,
               child: ElevatedButton(
                 onPressed: () {
+                  AudioManager.playSfx('Click_12.wav');
                   gameRef.overlays.remove(id);
-                  //gameRef.overlays.add(HighscoresMenu.id);
+                  gameRef.overlays.add(HighscoresMenu.id);
                 },
                 style: ElevatedButton.styleFrom(
                   //backgroundColor: Colors.grey, // Change the button color
@@ -72,6 +76,7 @@ class MainMenu extends StatelessWidget {
               width: 250,
               child: ElevatedButton(
                 onPressed: () {
+                  AudioManager.playSfx('Click_12.wav');
                   gameRef.overlays.remove(id);
                   gameRef.overlays.add(SettingsMenu.id);
                 },

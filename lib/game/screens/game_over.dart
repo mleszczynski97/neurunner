@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neurunner/game/gameplay.dart';
 import 'package:neurunner/game/screens/main_menu.dart';
 import '../game.dart';
+import '../managers/audio_manager.dart';
 
 class GameOver extends StatelessWidget {
   static const id = 'GameOver';
@@ -45,6 +46,7 @@ class GameOver extends StatelessWidget {
                 width: 150,
                 child: ElevatedButton(
                   onPressed: () {
+                    AudioManager.playSfx('Click_12.wav');
                     gameRef.overlays.remove(id);
                     gameRef.resumeEngine();
                     gameRef.removeAll(gameRef.children);
@@ -64,6 +66,7 @@ class GameOver extends StatelessWidget {
                 width: 150,
                 child: ElevatedButton(
                   onPressed: () {
+                    AudioManager.playSfx('Click_12.wav');
                     gameRef.overlays.remove(id);
                     gameRef.removeAll(gameRef.children);
                     gameRef.overlays.add(MainMenu.id);

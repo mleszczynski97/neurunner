@@ -13,9 +13,9 @@ class GamePlay extends Component
   //late NeurunnerPlayer player;
   PlatformModule? currentPlatform;
   late ParallaxComponent forestBackground;
+  final hud = Hud(priority: 1);
   List<String> platformModules = [];
   int moduleCounter = 0;
-  final hud = Hud(priority: 1);
 
   @override
   Future<void> onLoad() async {
@@ -90,14 +90,57 @@ class GamePlay extends Component
   void update(dt) {
     if (gameRef.player.position.x >
         constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
-      var platformIndex = Random().nextInt(platformModules.length - 1) + 1;
-      loadPlatformModule(platformModules.elementAt(platformIndex));
+      var platformIndex = moduleCounter ~/ 10;
+      print(platformIndex);
+      //Random().nextInt(platformModules.length - 1) + 1;
+      loadNextModule(platformIndex);
     }
+
     super.update(dt);
   }
 
+  void loadNextModule(int index) {
+    switch (index) {
+      case 0:
+        {
+          // First level
+          loadPlatformModule(platformModules.elementAt(index));
+        }
+        break;
+      case 1:
+        {
+          // Second level
+          loadPlatformModule(platformModules.elementAt(index));
+        }
+        break;
+      case 2:
+        {
+          // Third level
+          loadPlatformModule(platformModules.elementAt(index));
+        }
+        break;
+      case 3:
+        {
+          // Fourth level
+          loadPlatformModule(platformModules.elementAt(index));
+        }
+        break;
+      case 4:
+        {
+          // Fifth level
+          loadPlatformModule(platformModules.elementAt(index));
+        }
+        break;
+      default:
+        {
+          // Game finished
+          print("Game finished");
+        }
+        break;
+    }
+  }
+
   void loadPlatformModule(String platformName) async {
-    //currentPlatform?.priority = 1;
     currentPlatform = PlatformModule(platformName, moduleCounter);
     add(currentPlatform!);
     moduleCounter++;

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:neurunner/game/game.dart';
+import 'game/screens/highscores_menu.dart';
 
 import 'game/screens/game_over.dart';
 import 'game/screens/main_menu.dart';
@@ -10,7 +11,6 @@ import 'game/screens/settings_menu.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MyApp());
 }
 
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorSchemeSeed: Colors.deepPurple,
-        textTheme: Typography.whiteHelsinki, 
+        textTheme: Typography.whiteHelsinki,
         brightness: Brightness.dark,
       ),
       home: Scaffold(
@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
             PauseMenu.id: (context, game) => PauseMenu(gameRef: game),
             GameOver.id: (context, game) => GameOver(gameRef: game),
             SettingsMenu.id: (context, game) => SettingsMenu(gameRef: game),
+            HighscoresMenu.id: (context, game) => HighscoresMenu(gameRef: game),
           },
           initialActiveOverlays: const [MainMenu.id],
         ),

@@ -124,6 +124,7 @@ class SettingsMenu extends StatelessWidget {
                   width: 250,
                   child: ElevatedButton(
                     onPressed: () {
+                      AudioManager.playSfx('Click_12.wav');
                       gameRef.overlays.remove(id);
                       gameRef.overlays.add(MainMenu.id);
                     },

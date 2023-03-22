@@ -81,6 +81,7 @@ class PauseMenuState extends State<PauseMenu> {
                     IconButton(
                       onPressed: () {
                         AudioManager.bgm.value = !AudioManager.bgm.value;
+                        AudioManager.playSfx('Click_12.wav');
                       },
                       icon: Icon(
                         _bgmOn ? Icons.music_note : Icons.music_off,
@@ -97,6 +98,7 @@ class PauseMenuState extends State<PauseMenu> {
                     IconButton(
                       onPressed: () {
                         AudioManager.sfx.value = !AudioManager.sfx.value;
+                        AudioManager.playSfx('Click_12.wav');
                       },
                       icon: Icon(
                         _sfxOn ? Icons.volume_up : Icons.volume_off,
@@ -113,6 +115,7 @@ class PauseMenuState extends State<PauseMenu> {
                 child: ElevatedButton(
                   onPressed: () {
                     if (_bgmOn) {
+                      AudioManager.playSfx('Click_12.wav');
                       AudioManager.resumeBgm();
                     }
                     widget.gameRef.overlays.remove(id);
@@ -135,6 +138,7 @@ class PauseMenuState extends State<PauseMenu> {
                 width: 150,
                 child: ElevatedButton(
                   onPressed: () {
+                    AudioManager.playSfx('Click_12.wav');
                     AudioManager.stopBgm();
                     widget.gameRef.overlays.remove(id);
                     widget.gameRef.removeAll(widget.gameRef.children);
