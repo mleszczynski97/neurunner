@@ -29,6 +29,7 @@ class GamePlay extends Component
 
   // Setting the initial state of the game
   Future<void> initializeGame() async {
+
     // Loading in the image assets
     await gameRef.images.loadAll([
       'player/run.png',
@@ -37,9 +38,6 @@ class GamePlay extends Component
       'hud/attack.png',
       'hud/pause.png',
     ]);
-
-    // List of all platform modules
-    
 
     // Loading in the parallax background
     ParallaxComponent forestBackground = await gameRef.loadParallaxComponent(
@@ -84,8 +82,6 @@ class GamePlay extends Component
     if (gameRef.player.position.x >
         constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
       var platformIndex = moduleCounter ~/ 10;
-      print(platformIndex);
-      //Random().nextInt(platformModules.length - 1) + 1;
       loadNextModule(platformIndex);
     }
 
@@ -97,31 +93,36 @@ class GamePlay extends Component
       case 0:
         {
           // First level
-          loadPlatformModule(platformModules1.elementAt(index));
+          final nextModule = Random().nextInt(platformModules1.length - 1) + 1;
+          loadPlatformModule(platformModules1.elementAt(nextModule));
         }
         break;
       case 1:
         {
           // Second level
-          loadPlatformModule(platformModules2.elementAt(index));
+          final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
+          loadPlatformModule(platformModules2.elementAt(nextModule));
         }
         break;
       case 2:
         {
           // Third level
-          loadPlatformModule(platformModules3.elementAt(index));
+          final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
+          loadPlatformModule(platformModules3.elementAt(nextModule));
         }
         break;
       case 3:
         {
           // Fourth level
-          loadPlatformModule(platformModules4.elementAt(index));
+          final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
+          loadPlatformModule(platformModules4.elementAt(nextModule));
         }
         break;
       case 4:
         {
           // Fifth level
-          loadPlatformModule(platformModules5.elementAt(index));
+          final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
+          loadPlatformModule(platformModules5.elementAt(nextModule));
         }
         break;
       default:

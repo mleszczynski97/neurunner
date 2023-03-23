@@ -47,15 +47,13 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   void update(double dt) {
     super.update(dt);
     // v = u + at
-
     velocityY += gravity;
-
     velocityY = velocityY.clamp(-400, 300);
+
     velocityX *= 1.0001;
 
     // d = d0 + v * t
     position.y += velocityY * dt;
-
     position.x += velocityX * dt;
 
     elapsedTime += dt;
