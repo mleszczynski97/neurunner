@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/parallax.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/managers/audio_manager.dart';
+import 'package:neurunner/game/screens/game_over.dart';
 import 'game_constants.dart' as constants;
 import 'components/player.dart';
 import 'hud/hud.dart';
@@ -29,7 +30,6 @@ class GamePlay extends Component
 
   // Setting the initial state of the game
   Future<void> initializeGame() async {
-
     // Loading in the image assets
     await gameRef.images.loadAll([
       'player/run.png',
@@ -82,53 +82,72 @@ class GamePlay extends Component
     if (gameRef.player.position.x >
         constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
       var platformIndex = moduleCounter ~/ 10;
-      loadNextModule(platformIndex);
+      loadNextModule(platformIndex, moduleCounter);
     }
 
     super.update(dt);
   }
 
-  void loadNextModule(int index) {
-    switch (index) {
+  void loadNextModule(int level, int moduleCounter) {
+    switch (level) {
       case 0:
         {
           // First level
           final nextModule = Random().nextInt(platformModules1.length - 1) + 1;
-          loadPlatformModule(platformModules1.elementAt(nextModule));
+          moduleCounter == level * 10
+              ? loadPlatformModule(platformModules1.elementAt(0))
+              : loadPlatformModule(platformModules1.elementAt(nextModule));
         }
         break;
       case 1:
         {
           // Second level
           final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
-          loadPlatformModule(platformModules2.elementAt(nextModule));
+          moduleCounter == level * 10
+              ? loadPlatformModule(platformModules2.elementAt(0))
+              : loadPlatformModule(platformModules2.elementAt(nextModule));
         }
         break;
       case 2:
         {
           // Third level
           final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
-          loadPlatformModule(platformModules3.elementAt(nextModule));
+          moduleCounter == level * 10
+              ? loadPlatformModule(platformModules3.elementAt(0))
+              : loadPlatformModule(platformModules3.elementAt(nextModule));
         }
         break;
       case 3:
         {
           // Fourth level
           final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
-          loadPlatformModule(platformModules4.elementAt(nextModule));
+          moduleCounter == level * 10
+              ? loadPlatformModule(platformModules4.elementAt(0))
+              : loadPlatformModule(platformModules4.elementAt(nextModule));
         }
         break;
       case 4:
         {
           // Fifth level
           final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
-          loadPlatformModule(platformModules5.elementAt(nextModule));
+          moduleCounter == level * 10
+              ? loadPlatformModule(platformModules5.elementAt(0))
+              : loadPlatformModule(platformModules5.elementAt(nextModule));
         }
+        break;
+      case 10:
+        {
+          AudioManager.stopBgm();
+          gameRef.pauseEngine();
+          gameRef.overlays.add(GameOver.id);
+        }
+
         break;
       default:
         {
           // Game finished
-          print("Game finished");
+          final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
+          loadPlatformModule(platformModules5.elementAt(nextModule));
         }
         break;
     }
