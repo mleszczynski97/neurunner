@@ -13,8 +13,10 @@ class AudioManager {
       'Jump_8.wav',
       'Click_12.wav',
       'Glorious_morning.mp3',
+      'Loose_15.wav',
     ]);
   }
+
 
   static void playSfx(String file) {
     if (sfx.value) {
@@ -33,11 +35,10 @@ class AudioManager {
   }
 
   static void resumeBgm() {
-      FlameAudio.bgm.resume();
+    FlameAudio.bgm.resume();
   }
 
   static void stopBgm() {
-      FlameAudio.bgm.stop();
+    FlameAudio.bgm.stop();
   }
-
 }

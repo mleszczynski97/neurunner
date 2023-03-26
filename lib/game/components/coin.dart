@@ -5,6 +5,7 @@ import 'package:flutter/animation.dart';
 import 'package:neurunner/game/components/player.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
+import 'package:neurunner/game/managers/audio_manager.dart';
 
 class Coin extends SpriteComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
@@ -63,10 +64,12 @@ class Coin extends SpriteComponent
           LinearEffectController(0.2),
           onComplete: () {
             add(RemoveEffect());
+            AudioManager.playSfx('Click_12.wav');
           },
         ),
       );
 
+      
       gameRef.playerData.points.value += 10;
     }
     super.onCollisionStart(intersectionPoints, other);

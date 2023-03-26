@@ -1,5 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/components/platform.dart';
 
@@ -120,5 +121,19 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       _canJump = false;
       AudioManager.playSfx('Jump_8.wav');
     }
+  }
+
+  void hit() {
+    gameRef.playerData.hp.value -= 10;
+    velocityY = -320;
+    _isOnGround = false;
+    _canJump = false;
+    AudioManager.playSfx('Loose_15.wav');
+    add(
+        OpacityEffect.fadeOut(
+          EffectController(duration: 0.2, alternate: true , repeatCount: 3),
+          onComplete: () {},
+        ),
+      );
   }
 }
