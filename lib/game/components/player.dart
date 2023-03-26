@@ -57,9 +57,9 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     position.x += velocityX * dt;
 
     elapsedTime += dt;
-    if (elapsedTime > (1 / 60)) {
+    if (elapsedTime > (1 / 6)) {
       elapsedTime = 0.0;
-      gameRef.playerData.points.value = position.x ~/ 10;
+      gameRef.playerData.points.value++;
     }
 
     if (position.y > gameRef.size.y) {

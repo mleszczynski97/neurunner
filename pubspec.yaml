@@ -26,5 +26,6 @@ flutter:
     - assets/images/player/
     - assets/images/platforms/
     - assets/images/hud/
+    - assets/images/items/
     - assets/tiles/
     - assets/audio/
