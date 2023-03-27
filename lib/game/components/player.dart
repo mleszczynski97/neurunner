@@ -6,16 +6,17 @@ import 'package:neurunner/game/components/platform.dart';
 
 import '../managers/audio_manager.dart';
 
-const double gravity = 15;
+const double gravity = 20;
 
 class NeurunnerPlayer extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
+  final Vector2 _up = Vector2(0, -1);
   double velocityY = 0.0;
   double velocityX = 100.0;
+  double elapsedTime = 0.0;
   bool _isOnGround = false;
   bool _canJump = true;
-  final Vector2 _up = Vector2(0, -1);
-  double elapsedTime = 0.0;
+  bool _isHurt = false;
 
   NeurunnerPlayer({
     required Vector2 position,
@@ -32,7 +33,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     add(CircleHitbox());
-
+    size = Vector2.all(32);
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache('player/run.png'),
       SpriteAnimationData.sequenced(
@@ -41,31 +42,29 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         stepTime: 0.1,
       ),
     );
-    size = Vector2.all(32);
   }
 
   @override
   void update(double dt) {
     super.update(dt);
-    // v = u + at
-    velocityY += gravity;
-    velocityY = velocityY.clamp(-400, 300);
 
-    velocityX *= 1.0001;
+    elapsedTime += dt;
+    if (elapsedTime > (1 / 60)) {
+      elapsedTime = 0.0;
+      gameRef.playerData.points.value = position.x ~/ 10;
+      // v = u + at
+      velocityY += gravity;
+      velocityY = velocityY.clamp(-300, 300);
+    }
 
     // d = d0 + v * t
     position.y += velocityY * dt;
     position.x += velocityX * dt;
 
-    elapsedTime += dt;
-    if (elapsedTime > (1 / 6)) {
-      elapsedTime = 0.0;
-      gameRef.playerData.points.value++;
-    }
-
     if (position.y > gameRef.size.y) {
       gameRef.playerData.hp.value = 0;
     }
+
   }
 
   @override
@@ -91,49 +90,47 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         // collision normal by separation distance.
         position += collisionNormal.scaled(separationDistance);
         velocityY = 0;
-      } else {
-        _isOnGround = false;
       }
     }
     super.onCollision(intersectionPoints, other);
-  }
-
-  @override
-  void onCollisionEnd(PositionComponent other) {
-    // if (other is Platform) {
-    //    _isOnGround = false;
-    //  print(_isOnGround);
-    // }
-    super.onCollisionEnd(other);
   }
 
   //Jump method, called when user taps on the screen
   void jump() {
     if (_isOnGround) {
       // First jump
-      velocityY = -350;
+      velocityY = -300;
       _isOnGround = false;
       _canJump = true;
       AudioManager.playSfx('Jump_17.wav');
     } else if (_canJump) {
       // Allow double jump
-      velocityY = -300;
+      velocityY = -250;
       _canJump = false;
       AudioManager.playSfx('Jump_8.wav');
     }
   }
 
   void hit() {
-    gameRef.playerData.hp.value -= 10;
-    velocityY = -320;
-    _isOnGround = false;
-    _canJump = false;
-    AudioManager.playSfx('Loose_15.wav');
-    add(
+    if (!_isHurt) {
+      _isHurt = true;
+      gameRef.playerData.hp.value -= 10;
+      velocityY = -200;
+      _isOnGround = false;
+      _canJump = false;
+      AudioManager.playSfx('Loose_15.wav');
+      add(
         OpacityEffect.fadeOut(
-          EffectController(duration: 0.2, alternate: true , repeatCount: 3),
-          onComplete: () {},
+          EffectController(duration: 0.2, alternate: true, repeatCount: 5),
+          onComplete: () {
+            _isHurt = false;
+          },
         ),
       );
+    }
+  }
+
+  void increaseVelocity() {
+    velocityX += 100;
   }
 }

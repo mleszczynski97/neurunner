@@ -9,19 +9,19 @@ class AudioManager {
 
   static Future<void> init() async {
     FlameAudio.bgm.initialize();
-    await FlameAudio.audioCache.loadAll([
-      'Jump_8.wav',
-      'Click_12.wav',
-      'Glorious_morning.mp3',
-      'Loose_15.wav',
-    ]);
+    // await FlameAudio.audioCache.loadAll([
+    //   'Jump_8.wav',
+    //   'Click_12.wav',
+    //   'Glorious_morning.mp3',
+    //   'Loose_15.wav',
+    // ]);
   }
 
 
   static void playSfx(String file) {
-    if (sfx.value) {
-      FlameAudio.play(file, volume: sfxVolume.value);
-    }
+    // if (sfx.value) {
+    //   FlameAudio.play(file, volume: sfxVolume.value);
+    // }
   }
 
   static void playBgm(String file) {

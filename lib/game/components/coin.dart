@@ -50,7 +50,7 @@ class Coin extends SpriteComponent
   void update(double dt) {
     if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
-      print('Coin removed');
+      //print('Coin removed');
     }
     super.update(dt);
   }
@@ -65,12 +65,11 @@ class Coin extends SpriteComponent
           onComplete: () {
             add(RemoveEffect());
             AudioManager.playSfx('Click_12.wav');
+            gameRef.playerData.coins.value++;
           },
         ),
       );
-
       
-      gameRef.playerData.points.value += 10;
     }
     super.onCollisionStart(intersectionPoints, other);
   }

@@ -9,8 +9,10 @@ import 'package:neurunner/game/screens/pause_menu.dart';
 class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   late final TextComponent pointsTextComponent;
   late final TextComponent healthTextComponent;
+  late final TextComponent coinsTextComponent;
   late final TextComponent scoreTextComponent;
   late final SpriteComponent heartComponent;
+  late final SpriteComponent coinComponent;
   late final SpriteButtonComponent pauseButtonComponent;
   late final SpriteButtonComponent attackButtonComponent;
   late final SpriteButtonComponent jumpButtonComponent;
@@ -66,6 +68,23 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     );
     add(healthTextComponent);
 
+
+    coinComponent = SpriteComponent.fromImage(
+      game.images.fromCache('items/coin.png'),
+      position: Vector2(60, 10),
+      anchor: Anchor.topLeft,
+      size: Vector2.all(20),
+    );
+    add(coinComponent);
+
+    coinsTextComponent = TextComponent(
+      text: 'x0',
+      position: Vector2(80, 12),
+      anchor: Anchor.topLeft,
+      scale: Vector2.all(0.6),
+    );
+    add(coinsTextComponent);
+
     jumpButtonComponent = SpriteButtonComponent(
       onPressed: () {
         gameRef.player.jump();
@@ -91,6 +110,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     // Listeners for player data
     gameRef.playerData.points.addListener(onPointsChange);
     gameRef.playerData.hp.addListener(onHpChange);
+    gameRef.playerData.coins.addListener(onCoinsChange);
 
     return super.onLoad();
   }
@@ -99,6 +119,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   void onRemove() {
     gameRef.playerData.points.removeListener(onPointsChange);
     gameRef.playerData.hp.removeListener(onHpChange);
+    gameRef.playerData.coins.removeListener(onCoinsChange);
     super.onRemove();
   }
 
@@ -119,9 +140,13 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
         attackButtonComponent,
         jumpButtonComponent,
       ]);
-      AudioManager.stopBgm();      
+      AudioManager.stopBgm();
       gameRef.pauseEngine();
       gameRef.overlays.add(GameOver.id);
     }
+  }
+
+  void onCoinsChange() {
+    coinsTextComponent.text = 'x${gameRef.playerData.coins.value}';
   }
 }

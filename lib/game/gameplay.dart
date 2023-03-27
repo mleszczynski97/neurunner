@@ -20,11 +20,12 @@ class GamePlay extends Component
 
   @override
   Future<void> onLoad() async {
-    AudioManager.playBgm('Glorious_morning.mp3');
+    //AudioManager.playBgm('Glorious_morning.mp3');
     await initializeGame();
     gameRef.add(hud);
     gameRef.playerData.hp.value = 100;
     gameRef.playerData.points.value = 0;
+    gameRef.playerData.coins.value = 0;
     gameRef.resumeEngine();
   }
 
@@ -82,20 +83,20 @@ class GamePlay extends Component
   void update(dt) {
     if (gameRef.player.position.x >
         constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
-      var platformIndex = moduleCounter ~/ 10;
-      loadNextModule(platformIndex, moduleCounter);
+      var levelIndex = moduleCounter ~/ 10;
+      loadNextModule(levelIndex, moduleCounter);
     }
 
     super.update(dt);
   }
 
-  void loadNextModule(int level, int moduleCounter) {
-    switch (level) {
+  void loadNextModule(int levelIndex, int moduleCounter) {
+    switch (levelIndex) {
       case 0:
         {
           // First level
           final nextModule = Random().nextInt(platformModules1.length - 1) + 1;
-          moduleCounter == level * 10
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules1.elementAt(0))
               : loadPlatformModule(platformModules1.elementAt(nextModule));
         }
@@ -104,7 +105,7 @@ class GamePlay extends Component
         {
           // Second level
           final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
-          moduleCounter == level * 10
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules2.elementAt(0))
               : loadPlatformModule(platformModules2.elementAt(nextModule));
         }
@@ -113,7 +114,7 @@ class GamePlay extends Component
         {
           // Third level
           final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
-          moduleCounter == level * 10
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules3.elementAt(0))
               : loadPlatformModule(platformModules3.elementAt(nextModule));
         }
@@ -122,7 +123,7 @@ class GamePlay extends Component
         {
           // Fourth level
           final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
-          moduleCounter == level * 10
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules4.elementAt(0))
               : loadPlatformModule(platformModules4.elementAt(nextModule));
         }
@@ -131,12 +132,12 @@ class GamePlay extends Component
         {
           // Fifth level
           final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
-          moduleCounter == level * 10
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules5.elementAt(0))
               : loadPlatformModule(platformModules5.elementAt(nextModule));
         }
         break;
-      case 10:
+      case 5:
         {
           AudioManager.stopBgm();
           gameRef.pauseEngine();

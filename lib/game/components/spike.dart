@@ -35,9 +35,7 @@ class Spike extends PositionComponent
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
     if (other is NeurunnerPlayer) {
-      
-      gameRef.player.hit();
-      
+      gameRef.player.hit(); 
     }
     super.onCollisionStart(intersectionPoints, other);
   }
@@ -47,7 +45,6 @@ class Spike extends PositionComponent
   void update(double dt) {
     if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
-      //print('Spike removed');
     }
     super.update(dt);
   }

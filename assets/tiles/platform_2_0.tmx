@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="50" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="9">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="50" height="16" tilewidth="16" tileheight="16" infinite="0" nextlayerid="4" nextobjectid="9">
  <tileset firstgid="1" source="Textures-16.tsx"/>
  <layer id="1" name="Tiles" width="50" height="16">
   <data encoding="csv">
@@ -24,4 +24,5 @@
  <objectgroup id="2" name="Platforms">
   <object id="7" x="0" y="224" width="800" height="32"/>
  </objectgroup>
+ <objectgroup id="3" name="Spawnables"/>
 </map>

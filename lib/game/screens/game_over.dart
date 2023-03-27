@@ -38,9 +38,18 @@ class GameOver extends StatelessWidget {
                   )),
               Text('Final score: ${gameRef.playerData.points.value}',
                   style: const TextStyle(
+                    fontSize: 20,
+                  )),
+              Text('Coins collected: ${gameRef.playerData.coins.value}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                  )),
+              Text(
+                  'Total score: ${gameRef.playerData.points.value} + ${gameRef.playerData.coins.value} x 10 = ${gameRef.playerData.points.value + gameRef.playerData.coins.value * 10}',
+                  style: const TextStyle(
                     fontSize: 32,
                   )),
-              const SizedBox(height: 80),
+              const SizedBox(height: 16),
               SizedBox(
                 height: 50,
                 width: 150,
