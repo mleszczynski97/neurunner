@@ -36,6 +36,7 @@ class GamePlay extends Component
     await gameRef.images.loadAll([
       'player/run.png',
       'items/coin.png',
+      'items/fireball.png',
       'enemies/bat.png',
       'hud/heart.png',
       'hud/jump.png',

@@ -1,6 +1,7 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:neurunner/game/components/projectile.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/components/platform.dart';
 
@@ -111,6 +112,11 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     }
   }
 
+  void attack() {
+    final projectile = Projectile(position: position);
+    gameRef.add(projectile);
+  }
+  
   void hit() {
     if (!_isHurt) {
       _isHurt = true;

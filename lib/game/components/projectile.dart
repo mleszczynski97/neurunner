@@ -2,15 +2,15 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
+import 'package:neurunner/game/components/enemy.dart';
 import 'package:neurunner/game/components/player.dart';
-import 'package:neurunner/game/components/projectile.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
 import 'package:neurunner/game/managers/audio_manager.dart';
 
-class Enemy extends SpriteComponent
+class Projectile extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
-  Enemy({
+  Projectile({
     required Vector2 position,
     Vector2? size,
     Vector2? scale,
@@ -19,24 +19,31 @@ class Enemy extends SpriteComponent
     int? priority,
   }) : super(
           position: position,
-          size: Vector2.all(32),
+          size: Vector2(32, 16),
           scale: scale,
           angle: angle,
-          anchor: anchor,
+          anchor: Anchor.topCenter,
           priority: priority,
         ) {
     //debugMode = true;
   }
-  double velocityX = -50.0;
+  double velocityX = 250;
 
   @override
   Future<void> onLoad() async {
-    add(CircleHitbox()..collisionType = CollisionType.passive);
-    sprite = await Sprite.load('enemies/bat.png');
+    add(CircleHitbox()..collisionType = CollisionType.active);
+    animation = SpriteAnimation.fromFrameData(
+      gameRef.images.fromCache('items/fireball.png'),
+      SpriteAnimationData.sequenced(
+        amount: 3,
+        textureSize: Vector2(64, 32),
+        stepTime: 0.1,
+      ),
+    );
 
     await add(
       MoveEffect.by(
-        Vector2(0, -6),
+        Vector2(0, -2),
         EffectController(
           alternate: true,
           infinite: true,
@@ -49,11 +56,10 @@ class Enemy extends SpriteComponent
 
   @override
   void update(double dt) {
+    velocityX = gameRef.player.velocityX + 150;
     position.x += velocityX * dt;
-
-    if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
+    if (position.x > gameRef.player.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
-      //print('Enemy removed');
     }
     super.update(dt);
   }
@@ -61,10 +67,7 @@ class Enemy extends SpriteComponent
   @override
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
-    if (other is NeurunnerPlayer) {
-      gameRef.player.hit();
-    }
-    if (other is Projectile) {
+    if (other is Enemy) {
       add(
         OpacityEffect.fadeOut(
           LinearEffectController(0.2),

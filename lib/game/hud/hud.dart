@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
+import 'package:neurunner/game/components/projectile.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/managers/audio_manager.dart';
 import 'package:neurunner/game/screens/game_over.dart';
@@ -97,7 +98,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
     attackButtonComponent = SpriteButtonComponent(
       onPressed: () {
-        //print('attack!');
+       gameRef.player.attack();
       },
       button: Sprite(game.images.fromCache('hud/attack.png')),
       position: Vector2(630, 256),
