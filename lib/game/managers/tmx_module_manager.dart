@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:neurunner/game/components/enemy.dart';
 import 'package:neurunner/game/components/spike.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/components/platform.dart';
@@ -72,6 +74,10 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
         case 'Spike':
           final spike = Spike(position: position, size: Vector2.all(16));
           add(spike);
+          break;
+        case 'FlyingEnemy':
+          final enemy = Enemy(position: position, size: Vector2.all(32));
+          add(enemy);
           break;
         default:
       }
