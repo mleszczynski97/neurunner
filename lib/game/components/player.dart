@@ -129,8 +129,4 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       );
     }
   }
-
-  void increaseVelocity() {
-    velocityX += 100;
-  }
 }

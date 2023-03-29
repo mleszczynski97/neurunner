@@ -68,7 +68,6 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     );
     add(healthTextComponent);
 
-
     coinComponent = SpriteComponent.fromImage(
       game.images.fromCache('items/coin.png'),
       position: Vector2(60, 10),
@@ -111,6 +110,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     gameRef.playerData.points.addListener(onPointsChange);
     gameRef.playerData.hp.addListener(onHpChange);
     gameRef.playerData.coins.addListener(onCoinsChange);
+    gameRef.playerData.currentLevel.addListener(onCurrLevelChange);
 
     return super.onLoad();
   }
@@ -120,6 +120,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     gameRef.playerData.points.removeListener(onPointsChange);
     gameRef.playerData.hp.removeListener(onHpChange);
     gameRef.playerData.coins.removeListener(onCoinsChange);
+    gameRef.playerData.currentLevel.removeListener(onCurrLevelChange);
     super.onRemove();
   }
 
@@ -148,5 +149,13 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   void onCoinsChange() {
     coinsTextComponent.text = 'x${gameRef.playerData.coins.value}';
+  }
+
+  void onCurrLevelChange() {
+    if (gameRef.playerData.currentLevel.value == 1) {
+      gameRef.player.velocityX = 100;
+    } else {
+      gameRef.player.velocityX += 25;
+    }
   }
 }

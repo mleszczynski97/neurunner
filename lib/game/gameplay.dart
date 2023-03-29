@@ -26,6 +26,7 @@ class GamePlay extends Component
     gameRef.playerData.hp.value = 100;
     gameRef.playerData.points.value = 0;
     gameRef.playerData.coins.value = 0;
+    gameRef.playerData.currentLevel.value = 1;
     gameRef.resumeEngine();
   }
 
@@ -86,7 +87,6 @@ class GamePlay extends Component
       var levelIndex = moduleCounter ~/ 10;
       loadNextModule(levelIndex, moduleCounter);
     }
-
     super.update(dt);
   }
 
@@ -98,7 +98,10 @@ class GamePlay extends Component
           final nextModule = Random().nextInt(platformModules1.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules1.elementAt(0))
-              : loadPlatformModule(platformModules1.elementAt(nextModule));
+              : {
+                  loadPlatformModule(platformModules1.elementAt(nextModule)),
+                  gameRef.playerData.currentLevel.value = levelIndex + 1
+                };
         }
         break;
       case 1:
@@ -107,7 +110,10 @@ class GamePlay extends Component
           final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules2.elementAt(0))
-              : loadPlatformModule(platformModules2.elementAt(nextModule));
+              : {
+                  loadPlatformModule(platformModules2.elementAt(nextModule)),
+                  gameRef.playerData.currentLevel.value = levelIndex + 1
+                };
         }
         break;
       case 2:
@@ -116,7 +122,10 @@ class GamePlay extends Component
           final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules3.elementAt(0))
-              : loadPlatformModule(platformModules3.elementAt(nextModule));
+              : {
+                  loadPlatformModule(platformModules3.elementAt(nextModule)),
+                  gameRef.playerData.currentLevel.value = levelIndex + 1
+                };
         }
         break;
       case 3:
@@ -125,7 +134,10 @@ class GamePlay extends Component
           final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules4.elementAt(0))
-              : loadPlatformModule(platformModules4.elementAt(nextModule));
+              : {
+                  loadPlatformModule(platformModules4.elementAt(nextModule)),
+                  gameRef.playerData.currentLevel.value = levelIndex + 1
+                };
         }
         break;
       case 4:
@@ -134,7 +146,10 @@ class GamePlay extends Component
           final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules5.elementAt(0))
-              : loadPlatformModule(platformModules5.elementAt(nextModule));
+              : {
+                  loadPlatformModule(platformModules5.elementAt(nextModule)),
+                  gameRef.playerData.currentLevel.value = levelIndex + 1
+                };
         }
         break;
       case 5:
