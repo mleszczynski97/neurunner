@@ -65,7 +65,6 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     if (position.y > gameRef.size.y) {
       gameRef.playerData.hp.value = 0;
     }
-
   }
 
   @override
@@ -113,10 +112,15 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   }
 
   void attack() {
-    final projectile = Projectile(position: position);
-    gameRef.add(projectile);
+    if (gameRef.playerData.bullets.value > 0) {
+      gameRef.playerData.bullets.value--;
+      final projectile =
+          Projectile(position: Vector2(position.x + 20, position.y + 5));
+      gameRef.add(projectile);
+      print(gameRef.playerData.bullets.value);
+    }
   }
-  
+
   void hit() {
     if (!_isHurt) {
       _isHurt = true;

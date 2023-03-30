@@ -112,6 +112,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     gameRef.playerData.hp.addListener(onHpChange);
     gameRef.playerData.coins.addListener(onCoinsChange);
     gameRef.playerData.currentLevel.addListener(onCurrLevelChange);
+    gameRef.playerData.bullets.addListener(onBulletsChange);
 
     return super.onLoad();
   }
@@ -122,6 +123,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     gameRef.playerData.hp.removeListener(onHpChange);
     gameRef.playerData.coins.removeListener(onCoinsChange);
     gameRef.playerData.currentLevel.removeListener(onCurrLevelChange);
+    gameRef.playerData.bullets.removeListener(onBulletsChange);
     super.onRemove();
   }
 
@@ -158,5 +160,9 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     } else {
       gameRef.player.velocityX += 25;
     }
+  }
+
+  void onBulletsChange() {
+    //
   }
 }

@@ -27,6 +27,7 @@ class GamePlay extends Component
     gameRef.playerData.points.value = 0;
     gameRef.playerData.coins.value = 0;
     gameRef.playerData.currentLevel.value = 1;
+    gameRef.playerData.bullets.value = 3;
     gameRef.resumeEngine();
   }
 

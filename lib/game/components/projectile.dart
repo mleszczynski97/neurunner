@@ -3,7 +3,6 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
 import 'package:neurunner/game/components/enemy.dart';
-import 'package:neurunner/game/components/player.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
 import 'package:neurunner/game/managers/audio_manager.dart';
