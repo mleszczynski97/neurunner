@@ -1,6 +1,8 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
+import 'package:flame/extensions.dart';
+import 'package:flutter/material.dart';
 import 'package:neurunner/game/components/projectile.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/components/platform.dart';
@@ -129,6 +131,13 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       _isOnGround = false;
       _canJump = false;
       AudioManager.playSfx('Loose_15.wav');
+      add(ColorEffect(
+          Colors.red,
+          const Offset(0.0, 0.6),
+          EffectController(
+            duration: 1,
+            alternate: true,
+          )));
       add(
         OpacityEffect.fadeOut(
           EffectController(duration: 0.2, alternate: true, repeatCount: 5),

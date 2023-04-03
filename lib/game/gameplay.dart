@@ -43,6 +43,7 @@ class GamePlay extends Component
       'hud/jump.png',
       'hud/attack.png',
       'hud/pause.png',
+      'hud/level1.png',
     ]);
 
     // Loading in the parallax background

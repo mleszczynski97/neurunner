@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/input.dart';
 import 'package:neurunner/game/components/projectile.dart';
 import 'package:neurunner/game/game.dart';
@@ -8,11 +9,12 @@ import 'package:neurunner/game/screens/game_over.dart';
 import 'package:neurunner/game/screens/pause_menu.dart';
 
 class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
-  late final TextComponent metersTextComponent;
+  late final TextComponent distanceTextComponent;
   late final TextComponent healthTextComponent;
   late final TextComponent coinsTextComponent;
   late final SpriteComponent heartComponent;
   late final SpriteComponent coinComponent;
+  late final SpriteComponent levelComponent;
   late final SpriteButtonComponent pauseButtonComponent;
   late final SpriteButtonComponent attackButtonComponent;
   late final SpriteButtonComponent jumpButtonComponent;
@@ -23,14 +25,13 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   @override
   FutureOr<void> onLoad() async {
-
-    metersTextComponent = TextComponent(
+    distanceTextComponent = TextComponent(
       text: '0m',
       position: Vector2(320, 0),
       anchor: Anchor.topCenter,
-      scale: Vector2.all(0.7),  
+      scale: Vector2.all(0.7),
     );
-    add(metersTextComponent);
+    add(distanceTextComponent);
 
     pauseButtonComponent = SpriteButtonComponent(
       onPressed: () {
@@ -99,6 +100,14 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     )..positionType = PositionType.viewport;
     add(attackButtonComponent);
 
+    levelComponent = SpriteComponent.fromImage(
+      game.images.fromCache('hud/level1.png'),
+      position: Vector2(320, 128),
+      anchor: Anchor.center,
+    );
+    add(levelComponent);
+    levelComponent.add(OpacityEffect.fadeOut(EffectController(duration: 5)));
+
     // Listeners for player data
     gameRef.playerData.distance.addListener(onPointsChange);
     gameRef.playerData.hp.addListener(onHpChange);
@@ -120,15 +129,24 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   }
 
   void onPointsChange() {
-    metersTextComponent.text = '${gameRef.playerData.distance.value}m';
+    distanceTextComponent.text = '${gameRef.playerData.distance.value}m';
   }
 
   void onHpChange() {
+    // Updating the hp values displayed
     healthTextComponent.text = '${gameRef.playerData.hp.value}';
+
+    // Heart component pulsing effect
+    heartComponent.add(
+      OpacityEffect.fadeOut(
+        EffectController(duration: 0.5, alternate: true, repeatCount: 2),
+        onComplete: () {},
+      ),
+    );
 
     if (gameRef.playerData.hp.value == 0) {
       removeAll([
-        metersTextComponent,
+        distanceTextComponent,
         // healthTextComponent,
         // heartComponent,
         pauseButtonComponent,
@@ -143,12 +161,25 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   void onCoinsChange() {
     coinsTextComponent.text = 'x${gameRef.playerData.coins.value}';
+    coinComponent.add(SizeEffect.by(
+        Vector2.all(3),
+        EffectController(
+          duration: 0.1,
+          alternate: true,
+        )));
   }
 
   void onCurrLevelChange() {
     if (gameRef.playerData.currentLevel.value == 1) {
       gameRef.player.velocityX = 100;
     } else {
+      switch (gameRef.playerData.currentLevel.value) {
+        case 2:
+          //levelComponent.sprite = Sprite(game.images.fromCache('hud/level2.png'));
+          break;
+        default:
+      }
+      levelComponent.add(OpacityEffect.fadeIn(EffectController(duration: 3, alternate: true,)));
       gameRef.player.velocityX += 25;
     }
   }
