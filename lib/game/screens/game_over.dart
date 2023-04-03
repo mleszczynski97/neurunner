@@ -32,11 +32,11 @@ class GameOver extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('YOU DIED',
+              const Text('GAME OVER',
                   style: TextStyle(
                     fontSize: 64,
                   )),
-              Text('Final score: ${gameRef.playerData.points.value}',
+              Text('Final distance: ${gameRef.playerData.distance.value}m',
                   style: const TextStyle(
                     fontSize: 20,
                   )),
@@ -45,7 +45,7 @@ class GameOver extends StatelessWidget {
                     fontSize: 20,
                   )),
               Text(
-                  'Total score: ${gameRef.playerData.points.value} + ${gameRef.playerData.coins.value} x 10 = ${gameRef.playerData.points.value + gameRef.playerData.coins.value * 10}',
+                  'Total score: ${gameRef.playerData.distance.value + gameRef.playerData.coins.value * 10}',
                   style: const TextStyle(
                     fontSize: 32,
                   )),

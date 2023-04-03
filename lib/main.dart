@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:neurunner/game/game.dart';
 import 'game/screens/highscores_menu.dart';
-
 import 'game/screens/game_over.dart';
 import 'game/screens/main_menu.dart';
 import 'game/screens/pause_menu.dart';

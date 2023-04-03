@@ -24,7 +24,7 @@ class GamePlay extends Component
     await initializeGame();
     gameRef.add(hud);
     gameRef.playerData.hp.value = 100;
-    gameRef.playerData.points.value = 0;
+    gameRef.playerData.distance.value = 0;
     gameRef.playerData.coins.value = 0;
     gameRef.playerData.currentLevel.value = 1;
     gameRef.playerData.bullets.value = 3;

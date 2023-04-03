@@ -8,10 +8,9 @@ import 'package:neurunner/game/screens/game_over.dart';
 import 'package:neurunner/game/screens/pause_menu.dart';
 
 class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
-  late final TextComponent pointsTextComponent;
+  late final TextComponent metersTextComponent;
   late final TextComponent healthTextComponent;
   late final TextComponent coinsTextComponent;
-  late final TextComponent scoreTextComponent;
   late final SpriteComponent heartComponent;
   late final SpriteComponent coinComponent;
   late final SpriteButtonComponent pauseButtonComponent;
@@ -24,21 +23,14 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   @override
   FutureOr<void> onLoad() async {
-    scoreTextComponent = TextComponent(
-      text: 'SCORE',
+
+    metersTextComponent = TextComponent(
+      text: '0m',
       position: Vector2(320, 0),
       anchor: Anchor.topCenter,
-      scale: Vector2.all(0.6),
+      scale: Vector2.all(0.7),  
     );
-    add(scoreTextComponent);
-
-    pointsTextComponent = TextComponent(
-      text: '0',
-      position: Vector2(320, 15),
-      anchor: Anchor.topCenter,
-      scale: Vector2.all(0.5),
-    );
-    add(pointsTextComponent);
+    add(metersTextComponent);
 
     pauseButtonComponent = SpriteButtonComponent(
       onPressed: () {
@@ -98,7 +90,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
     attackButtonComponent = SpriteButtonComponent(
       onPressed: () {
-       gameRef.player.attack();
+        gameRef.player.attack();
       },
       button: Sprite(game.images.fromCache('hud/attack.png')),
       position: Vector2(630, 256),
@@ -108,7 +100,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     add(attackButtonComponent);
 
     // Listeners for player data
-    gameRef.playerData.points.addListener(onPointsChange);
+    gameRef.playerData.distance.addListener(onPointsChange);
     gameRef.playerData.hp.addListener(onHpChange);
     gameRef.playerData.coins.addListener(onCoinsChange);
     gameRef.playerData.currentLevel.addListener(onCurrLevelChange);
@@ -119,7 +111,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   @override
   void onRemove() {
-    gameRef.playerData.points.removeListener(onPointsChange);
+    gameRef.playerData.distance.removeListener(onPointsChange);
     gameRef.playerData.hp.removeListener(onHpChange);
     gameRef.playerData.coins.removeListener(onCoinsChange);
     gameRef.playerData.currentLevel.removeListener(onCurrLevelChange);
@@ -128,7 +120,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   }
 
   void onPointsChange() {
-    pointsTextComponent.text = '${gameRef.playerData.points.value}';
+    metersTextComponent.text = '${gameRef.playerData.distance.value}m';
   }
 
   void onHpChange() {
@@ -136,8 +128,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
     if (gameRef.playerData.hp.value == 0) {
       removeAll([
-        pointsTextComponent,
-        scoreTextComponent,
+        metersTextComponent,
         // healthTextComponent,
         // heartComponent,
         pauseButtonComponent,
