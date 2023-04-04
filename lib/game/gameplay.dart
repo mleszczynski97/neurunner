@@ -26,7 +26,6 @@ class GamePlay extends Component
     gameRef.playerData.hp.value = 100;
     gameRef.playerData.distance.value = 0;
     gameRef.playerData.coins.value = 0;
-    gameRef.playerData.currentLevel.value = 1;
     gameRef.playerData.bullets.value = 3;
     gameRef.resumeEngine();
   }
@@ -44,6 +43,10 @@ class GamePlay extends Component
       'hud/attack.png',
       'hud/pause.png',
       'hud/level1.png',
+      'hud/level2.png',
+      'hud/level3.png',
+      'hud/level4.png',
+      'hud/level5.png',
     ]);
 
     // Loading in the parallax background
@@ -88,7 +91,7 @@ class GamePlay extends Component
   void update(dt) {
     if (gameRef.player.position.x >
         constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
-      var levelIndex = moduleCounter ~/ 10;
+      var levelIndex = moduleCounter ~/ 20;
       loadNextModule(levelIndex, moduleCounter);
     }
     super.update(dt);
@@ -100,60 +103,45 @@ class GamePlay extends Component
         {
           // First level
           final nextModule = Random().nextInt(platformModules1.length - 1) + 1;
-          moduleCounter == levelIndex * 10
+          moduleCounter == levelIndex * 20
               ? loadPlatformModule(platformModules1.elementAt(0))
-              : {
-                  loadPlatformModule(platformModules1.elementAt(nextModule)),
-                  gameRef.playerData.currentLevel.value = levelIndex + 1
-                };
+              : loadPlatformModule(platformModules1.elementAt(nextModule));
         }
         break;
       case 1:
         {
           // Second level
           final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
-          moduleCounter == levelIndex * 10
+          moduleCounter == levelIndex * 20
               ? loadPlatformModule(platformModules2.elementAt(0))
-              : {
-                  loadPlatformModule(platformModules2.elementAt(nextModule)),
-                  gameRef.playerData.currentLevel.value = levelIndex + 1
-                };
+              : loadPlatformModule(platformModules2.elementAt(nextModule));
         }
         break;
       case 2:
         {
           // Third level
           final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
-          moduleCounter == levelIndex * 10
+          moduleCounter == levelIndex * 20
               ? loadPlatformModule(platformModules3.elementAt(0))
-              : {
-                  loadPlatformModule(platformModules3.elementAt(nextModule)),
-                  gameRef.playerData.currentLevel.value = levelIndex + 1
-                };
+              : loadPlatformModule(platformModules3.elementAt(nextModule));
         }
         break;
       case 3:
         {
           // Fourth level
           final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
-          moduleCounter == levelIndex * 10
+          moduleCounter == levelIndex * 20
               ? loadPlatformModule(platformModules4.elementAt(0))
-              : {
-                  loadPlatformModule(platformModules4.elementAt(nextModule)),
-                  gameRef.playerData.currentLevel.value = levelIndex + 1
-                };
+              : loadPlatformModule(platformModules4.elementAt(nextModule));
         }
         break;
       case 4:
         {
           // Fifth level
           final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
-          moduleCounter == levelIndex * 10
+          moduleCounter == levelIndex * 20
               ? loadPlatformModule(platformModules5.elementAt(0))
-              : {
-                  loadPlatformModule(platformModules5.elementAt(nextModule)),
-                  gameRef.playerData.currentLevel.value = levelIndex + 1
-                };
+              : loadPlatformModule(platformModules5.elementAt(nextModule));
         }
         break;
       case 5:
@@ -162,15 +150,8 @@ class GamePlay extends Component
           gameRef.pauseEngine();
           gameRef.overlays.add(GameOver.id);
         }
-
         break;
-      default:
-        {
-          // Game finished
-          final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
-          loadPlatformModule(platformModules5.elementAt(nextModule));
-        }
-        break;
+      
     }
   }
 

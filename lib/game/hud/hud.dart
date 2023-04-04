@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/input.dart';
-import 'package:neurunner/game/components/projectile.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/managers/audio_manager.dart';
 import 'package:neurunner/game/screens/game_over.dart';
@@ -109,10 +108,9 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     levelComponent.add(OpacityEffect.fadeOut(EffectController(duration: 5)));
 
     // Listeners for player data
-    gameRef.playerData.distance.addListener(onPointsChange);
+    gameRef.playerData.distance.addListener(onDistanceChange);
     gameRef.playerData.hp.addListener(onHpChange);
     gameRef.playerData.coins.addListener(onCoinsChange);
-    gameRef.playerData.currentLevel.addListener(onCurrLevelChange);
     gameRef.playerData.bullets.addListener(onBulletsChange);
 
     return super.onLoad();
@@ -120,16 +118,27 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   @override
   void onRemove() {
-    gameRef.playerData.distance.removeListener(onPointsChange);
+    gameRef.playerData.distance.removeListener(onDistanceChange);
     gameRef.playerData.hp.removeListener(onHpChange);
     gameRef.playerData.coins.removeListener(onCoinsChange);
-    gameRef.playerData.currentLevel.removeListener(onCurrLevelChange);
     gameRef.playerData.bullets.removeListener(onBulletsChange);
     super.onRemove();
   }
 
-  void onPointsChange() {
+  void onDistanceChange() {
     distanceTextComponent.text = '${gameRef.playerData.distance.value}m';
+    if (gameRef.playerData.distance.value % 800 == 0) {
+      final int level = (gameRef.playerData.distance.value ~/ 800) + 1;
+      final String path = 'hud/level$level.png';
+      levelComponent.sprite = Sprite(game.images.fromCache(path));
+      level == 1
+          ? gameRef.player.velocityX = 100
+          : gameRef.player.velocityX += 25;
+      levelComponent.add(OpacityEffect.fadeIn(EffectController(
+        duration: 3,
+        alternate: true,
+      )));
+    }
   }
 
   void onHpChange() {
@@ -147,8 +156,6 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     if (gameRef.playerData.hp.value == 0) {
       removeAll([
         distanceTextComponent,
-        // healthTextComponent,
-        // heartComponent,
         pauseButtonComponent,
         attackButtonComponent,
         jumpButtonComponent,
@@ -167,21 +174,6 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
           duration: 0.1,
           alternate: true,
         )));
-  }
-
-  void onCurrLevelChange() {
-    if (gameRef.playerData.currentLevel.value == 1) {
-      gameRef.player.velocityX = 100;
-    } else {
-      switch (gameRef.playerData.currentLevel.value) {
-        case 2:
-          //levelComponent.sprite = Sprite(game.images.fromCache('hud/level2.png'));
-          break;
-        default:
-      }
-      levelComponent.add(OpacityEffect.fadeIn(EffectController(duration: 3, alternate: true,)));
-      gameRef.player.velocityX += 25;
-    }
   }
 
   void onBulletsChange() {
