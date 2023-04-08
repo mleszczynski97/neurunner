@@ -91,7 +91,7 @@ class GamePlay extends Component
   void update(dt) {
     if (gameRef.player.position.x >
         constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
-      var levelIndex = moduleCounter ~/ 20;
+      var levelIndex = moduleCounter ~/ 10;
       loadNextModule(levelIndex, moduleCounter);
     }
     super.update(dt);
@@ -103,7 +103,7 @@ class GamePlay extends Component
         {
           // First level
           final nextModule = Random().nextInt(platformModules1.length - 1) + 1;
-          moduleCounter == levelIndex * 20
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules1.elementAt(0))
               : loadPlatformModule(platformModules1.elementAt(nextModule));
         }
@@ -112,7 +112,7 @@ class GamePlay extends Component
         {
           // Second level
           final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
-          moduleCounter == levelIndex * 20
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules2.elementAt(0))
               : loadPlatformModule(platformModules2.elementAt(nextModule));
         }
@@ -121,7 +121,7 @@ class GamePlay extends Component
         {
           // Third level
           final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
-          moduleCounter == levelIndex * 20
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules3.elementAt(0))
               : loadPlatformModule(platformModules3.elementAt(nextModule));
         }
@@ -130,7 +130,7 @@ class GamePlay extends Component
         {
           // Fourth level
           final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
-          moduleCounter == levelIndex * 20
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules4.elementAt(0))
               : loadPlatformModule(platformModules4.elementAt(nextModule));
         }
@@ -139,7 +139,7 @@ class GamePlay extends Component
         {
           // Fifth level
           final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
-          moduleCounter == levelIndex * 20
+          moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules5.elementAt(0))
               : loadPlatformModule(platformModules5.elementAt(nextModule));
         }
@@ -151,7 +151,6 @@ class GamePlay extends Component
           gameRef.overlays.add(GameOver.id);
         }
         break;
-      
     }
   }
 
