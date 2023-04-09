@@ -1,7 +1,6 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
-import 'package:flutter/animation.dart';
 import 'package:neurunner/game/components/player.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
@@ -32,15 +31,14 @@ class Heart extends SpriteComponent
     sprite = await Sprite.load('hud/heart.png');
     add(CircleHitbox()..collisionType = CollisionType.passive);
 
-    // Keeps the coin bouncing
+    // Heartbeat animation
     await add(
-      MoveEffect.by(
-        Vector2(0, -6),
+      SizeEffect.by(
+        Vector2.all(3),
         EffectController(
+          duration: 0.4,
           alternate: true,
           infinite: true,
-          duration: 0.5,
-          curve: Curves.ease,
         ),
       ),
     );
@@ -50,7 +48,7 @@ class Heart extends SpriteComponent
   void update(double dt) {
     if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
-      print('Heart removed');
+      //print('Heart removed');
     }
     super.update(dt);
   }
@@ -65,11 +63,12 @@ class Heart extends SpriteComponent
           onComplete: () {
             add(RemoveEffect());
             AudioManager.playSfx('Click_12.wav');
-            gameRef.playerData.hp.value += 10;
+            if (gameRef.playerData.hp.value < 100) {
+              gameRef.playerData.hp.value += 10;
+            }
           },
         ),
       );
-      
     }
     super.onCollisionStart(intersectionPoints, other);
   }

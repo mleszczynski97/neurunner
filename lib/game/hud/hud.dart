@@ -142,16 +142,24 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   }
 
   void onHpChange() {
+    if (gameRef.playerData.hp.value > 100) {
+      // Keeping hp max at 100
+      gameRef.playerData.hp.value = 100;
+    } else {
+      // Heart component pulsing effect
+      heartComponent.add(
+        OpacityEffect.fadeOut(
+          EffectController(
+            duration: 0.3,
+            alternate: true,
+          ),
+          onComplete: () {},
+        ),
+      );
+    }
+
     // Updating the hp values displayed
     healthTextComponent.text = '${gameRef.playerData.hp.value}';
-
-    // Heart component pulsing effect
-    heartComponent.add(
-      OpacityEffect.fadeOut(
-        EffectController(duration: 0.5, alternate: true, repeatCount: 2),
-        onComplete: () {},
-      ),
-    );
 
     if (gameRef.playerData.hp.value == 0) {
       removeAll([
