@@ -42,6 +42,7 @@ class GamePlay extends Component
       'hud/heart.png',
       'hud/jump.png',
       'hud/attack.png',
+      'hud/embers_hud.png',
       'hud/pause.png',
       'hud/level1.png',
       'hud/level2.png',

@@ -14,6 +14,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   late final SpriteComponent heartComponent;
   late final SpriteComponent coinComponent;
   late final SpriteComponent levelComponent;
+  late final SpriteComponent embersComponent;
   late final SpriteButtonComponent pauseButtonComponent;
   late final SpriteButtonComponent attackButtonComponent;
   late final SpriteButtonComponent jumpButtonComponent;
@@ -52,6 +53,14 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
       size: Vector2.all(60),
     );
     add(heartComponent);
+
+    embersComponent = SpriteComponent.fromImage(
+      game.images.fromCache('hud/embers_hud.png'),
+      position: Vector2(320, 256),
+      anchor: Anchor.bottomCenter,
+      size: Vector2(90,36),
+    );
+    add(embersComponent);
 
     healthTextComponent = TextComponent(
       text: '100',
