@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
+import 'package:neurunner/game/components/ember.dart';
 import 'package:neurunner/game/components/enemy.dart';
 import 'package:neurunner/game/components/spike.dart';
 import 'package:neurunner/game/game.dart';
@@ -8,8 +9,6 @@ import 'package:neurunner/game/components/platform.dart';
 import 'package:neurunner/game/components/coin.dart';
 import 'package:neurunner/game/components/heart.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
-
-
 
 class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
   final String platformName;
@@ -71,6 +70,12 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
             position: position,
           );
           add(coin);
+          break;
+        case 'Ember':
+          final ember = Ember(
+            position: position,
+          );
+          add(ember);
           break;
         case 'Heart':
           final heart = Heart(

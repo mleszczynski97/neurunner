@@ -37,6 +37,7 @@ class GamePlay extends Component
       'player/run.png',
       'items/coin.png',
       'items/fireball.png',
+      'items/ember.png',
       'enemies/bat.png',
       'hud/heart.png',
       'hud/jump.png',
