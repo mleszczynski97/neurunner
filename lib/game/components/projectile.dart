@@ -18,7 +18,7 @@ class Projectile extends SpriteAnimationComponent
     int? priority,
   }) : super(
           position: position,
-          size: Vector2(32, 16),
+          size: Vector2(32, 12),
           scale: scale,
           angle: angle,
           anchor: Anchor.topCenter,

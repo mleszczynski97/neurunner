@@ -12,6 +12,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   late final TextComponent healthTextComponent;
   late final TextComponent coinsTextComponent;
   late final SpriteComponent heartComponent;
+  late final SpriteComponent bordersComponent;
   late final SpriteComponent coinComponent;
   late final SpriteComponent levelComponent;
   late final SpriteComponent embersComponent;
@@ -25,11 +26,19 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   @override
   FutureOr<void> onLoad() async {
+    bordersComponent = SpriteComponent.fromImage(
+      game.images.fromCache('hud/borders_hud.png'),
+      position: Vector2(0, 0),
+      anchor: Anchor.topLeft,
+      size: Vector2(640, 256),
+    );
+    add(bordersComponent);
+
     distanceTextComponent = TextComponent(
       text: '0m',
       position: Vector2(320, 0),
       anchor: Anchor.topCenter,
-      scale: Vector2.all(0.7),
+      scale: Vector2.all(0.55),
     );
     add(distanceTextComponent);
 
@@ -40,7 +49,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
         gameRef.overlays.add(PauseMenu.id);
       },
       button: Sprite(game.images.fromCache('hud/pause.png')),
-      position: Vector2(638, 2),
+      position: Vector2(638, 4),
       anchor: Anchor.topRight,
       size: Vector2.all(32),
     )..positionType = PositionType.viewport;
@@ -48,31 +57,31 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
     heartComponent = SpriteComponent.fromImage(
       game.images.fromCache('hud/heart.png'),
-      position: Vector2(0, 0),
+      position: Vector2(0, 4),
       anchor: Anchor.topLeft,
-      size: Vector2.all(60),
+      size: Vector2.all(50),
     );
     add(heartComponent);
 
-    embersComponent = SpriteComponent.fromImage(
-      game.images.fromCache('hud/embers_hud_0.png'),
-      position: Vector2(320, 256),
-      anchor: Anchor.bottomCenter,
-      size: Vector2(80, 48),
-    );
-    add(embersComponent);
-
     healthTextComponent = TextComponent(
       text: '100',
-      position: Vector2(30, 20),
+      position: Vector2(24, 20),
       anchor: Anchor.topCenter,
       scale: Vector2.all(0.5),
     );
     add(healthTextComponent);
 
+    embersComponent = SpriteComponent.fromImage(
+      game.images.fromCache('hud/embers_hud_0.png'),
+      position: Vector2(320, 256),
+      anchor: Anchor.bottomCenter,
+      size: Vector2(76, 42),
+    );
+    add(embersComponent);
+
     coinComponent = SpriteComponent.fromImage(
       game.images.fromCache('items/coin.png'),
-      position: Vector2(60, 10),
+      position: Vector2(50, 10),
       anchor: Anchor.topLeft,
       size: Vector2.all(20),
     );
@@ -80,7 +89,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
     coinsTextComponent = TextComponent(
       text: 'x0',
-      position: Vector2(80, 12),
+      position: Vector2(71, 12),
       anchor: Anchor.topLeft,
       scale: Vector2.all(0.6),
     );
