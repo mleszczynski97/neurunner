@@ -50,7 +50,7 @@ class Ember extends SpriteComponent
   void update(double dt) {
     if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
-      print('Ember removed');
+      // print('Ember removed');
     }
     super.update(dt);
   }

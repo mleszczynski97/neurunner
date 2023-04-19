@@ -26,7 +26,7 @@ class GamePlay extends Component
     gameRef.playerData.hp.value = 100;
     gameRef.playerData.distance.value = 0;
     gameRef.playerData.coins.value = 0;
-    gameRef.playerData.bullets.value = 3;
+    gameRef.playerData.bullets.value = 0;
     gameRef.resumeEngine();
   }
 
@@ -42,7 +42,10 @@ class GamePlay extends Component
       'hud/heart.png',
       'hud/jump.png',
       'hud/attack.png',
-      'hud/embers_hud.png',
+      'hud/embers_hud_0.png',
+      'hud/embers_hud_1.png',
+      'hud/embers_hud_2.png',
+      'hud/embers_hud_3.png',
       'hud/pause.png',
       'hud/level1.png',
       'hud/level2.png',

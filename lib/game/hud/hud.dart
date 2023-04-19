@@ -55,10 +55,10 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     add(heartComponent);
 
     embersComponent = SpriteComponent.fromImage(
-      game.images.fromCache('hud/embers_hud.png'),
+      game.images.fromCache('hud/embers_hud_0.png'),
       position: Vector2(320, 256),
       anchor: Anchor.bottomCenter,
-      size: Vector2(90,36),
+      size: Vector2(80, 48),
     );
     add(embersComponent);
 
@@ -194,6 +194,13 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   }
 
   void onBulletsChange() {
-    //
+    embersComponent.sprite = Sprite(game.images
+        .fromCache('hud/embers_hud_${gameRef.playerData.bullets.value}.png'));
+    embersComponent.add(SizeEffect.by(
+        Vector2.all(3),
+        EffectController(
+          duration: 0.1,
+          alternate: true,
+        )));
   }
 }

@@ -97,7 +97,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     super.onCollision(intersectionPoints, other);
   }
 
-  //Jump method, called when user taps on the screen
+  //Jump method, called when user taps on the left side of the screen
   void jump() {
     if (_isOnGround) {
       // First jump
@@ -113,16 +113,17 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     }
   }
 
+  //Attack method, called when user taps on the right side of the screen
   void attack() {
     if (gameRef.playerData.bullets.value > 0) {
       gameRef.playerData.bullets.value--;
       final projectile =
           Projectile(position: Vector2(position.x + 20, position.y + 5));
       gameRef.add(projectile);
-      print(gameRef.playerData.bullets.value);
     }
   }
 
+  // Hit method, called when player collides with a spike or enemy
   void hit() {
     if (!_isHurt) {
       _isHurt = true;
