@@ -20,6 +20,11 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   bool _isOnGround = false;
   bool _canJump = true;
   bool _isHurt = false;
+  bool _isAttacking = false;
+  late SpriteAnimation jumpUp;
+  late SpriteAnimation run;
+  late SpriteAnimation jumpDown;
+  late SpriteAnimation swing;
 
   NeurunnerPlayer({
     required Vector2 position,
@@ -35,21 +40,64 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
   @override
   Future<void> onLoad() async {
+    size = Vector2(128, 32);
     add(CircleHitbox());
-    size = Vector2.all(32);
-    animation = SpriteAnimation.fromFrameData(
-      game.images.fromCache('player/run.png'),
+
+    // Run animation
+    run = SpriteAnimation.fromFrameData(
+      game.images.fromCache('player/fire_run.png'),
       SpriteAnimationData.sequenced(
         amount: 8,
-        textureSize: Vector2(80, 64),
+        textureSize: Vector2(192, 48),
         stepTime: 0.1,
       ),
     );
+
+    // Jump up animation
+    jumpUp = SpriteAnimation.fromFrameData(
+      game.images.fromCache('player/fire_jump.png'),
+      SpriteAnimationData.sequenced(
+        amount: 3,
+        textureSize: Vector2(192, 48),
+        stepTime: 0.1,
+      ),
+    );
+
+    // Fall down animation
+    jumpDown = SpriteAnimation.fromFrameData(
+      game.images.fromCache('player/fire_fall.png'),
+      SpriteAnimationData.sequenced(
+        amount: 3,
+        textureSize: Vector2(192, 48),
+        stepTime: 0.1,
+      ),
+    );
+
+    // Sword swing animation
+    swing = SpriteAnimation.fromFrameData(
+      game.images.fromCache('player/fire_attack.png'),
+      SpriteAnimationData.sequenced(
+        amount: 6,
+        textureSize: Vector2(192, 48),
+        stepTime: 0.1,
+      ),
+    );
+
+    // Setting initial animation to running
+    animation = run;
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    if (animation == swing && animation?.currentIndex == 5) {
+      animation?.currentIndex = 0;
+      _isAttacking = false;
+    }
+
+    if (velocityY != 0 && !_isAttacking) {
+      velocityY > 0 ? animation = jumpDown : animation = jumpUp;
+    }
 
     elapsedTime += dt;
     if (elapsedTime > (1 / 60)) {
@@ -79,13 +127,14 @@ class NeurunnerPlayer extends SpriteAnimationComponent
             2;
 
         final collisionNormal = absoluteCenter - mid;
-        final separationDistance = (size.x / 2) - collisionNormal.length;
+        final separationDistance = (size.y / 2) - collisionNormal.length;
         collisionNormal.normalize();
 
         // If collision normal is almost upwards,
         // player must be on ground.
         if (_up.dot(collisionNormal) > 0.9) {
           _isOnGround = true;
+          if (!_isAttacking) animation = run;
         }
 
         // Resolve collision by moving player along
@@ -116,9 +165,14 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   //Attack method, called when user taps on the right side of the screen
   void attack() {
     if (gameRef.playerData.bullets.value > 0) {
+      
+      _isAttacking = true;
+      animation = swing;
+
       gameRef.playerData.bullets.value--;
-      final projectile =
-          Projectile(position: Vector2(position.x + 20, position.y + 5));
+      final projectile = Projectile(
+        position: Vector2(position.x + 48, position.y-5),
+      );
       gameRef.add(projectile);
     }
   }
@@ -126,9 +180,9 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   // Hit method, called when player collides with a spike or enemy
   void hit() {
     if (!_isHurt) {
-      _isHurt = true;
       gameRef.playerData.hp.value -= 10;
       velocityY = -200;
+      _isHurt = true;
       _isOnGround = false;
       _canJump = false;
       AudioManager.playSfx('Loose_15.wav');

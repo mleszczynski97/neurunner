@@ -95,7 +95,7 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
           final enemy = Enemy(
             position: position,
             size: Vector2.all(32),
-            enemyType: "Flying",
+            enemyType: "flying",
           );
           add(enemy);
           break;
@@ -103,7 +103,7 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
           final enemy = Enemy(
             position: position,
             size: Vector2.all(32),
-            enemyType: "Ground",
+            enemyType: "ground",
           );
           add(enemy);
           break;

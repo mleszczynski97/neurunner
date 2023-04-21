@@ -18,7 +18,7 @@ class Projectile extends SpriteAnimationComponent
     int? priority,
   }) : super(
           position: position,
-          size: Vector2(32, 12),
+          size: Vector2(48, 32),
           scale: scale,
           angle: angle,
           anchor: Anchor.topCenter,
@@ -32,10 +32,10 @@ class Projectile extends SpriteAnimationComponent
   Future<void> onLoad() async {
     add(CircleHitbox()..collisionType = CollisionType.active);
     animation = SpriteAnimation.fromFrameData(
-      gameRef.images.fromCache('items/fireball.png'),
+      gameRef.images.fromCache('items/bolt.png'),
       SpriteAnimationData.sequenced(
-        amount: 3,
-        textureSize: Vector2(64, 32),
+        amount: 4,
+        textureSize: Vector2(48, 32),
         stepTime: 0.1,
       ),
     );
@@ -69,7 +69,7 @@ class Projectile extends SpriteAnimationComponent
     if (other is Enemy) {
       add(
         OpacityEffect.fadeOut(
-          LinearEffectController(0.2),
+          LinearEffectController(0.1),
           onComplete: () {
             add(RemoveEffect());
             AudioManager.playSfx('Click_12.wav');

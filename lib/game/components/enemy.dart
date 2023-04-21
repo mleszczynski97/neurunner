@@ -12,6 +12,8 @@ class Enemy extends SpriteComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
   String enemyType;
   double velocityX = -50.0;
+  double jumpTime = 0;
+  double jumpVelocity = -100.0;
 
   Enemy({
     required Vector2 position,
@@ -23,7 +25,7 @@ class Enemy extends SpriteComponent
     int? priority,
   }) : super(
           position: position,
-          size: Vector2.all(32),
+          size: Vector2.all(16),
           scale: scale,
           angle: angle,
           anchor: anchor,
@@ -34,13 +36,12 @@ class Enemy extends SpriteComponent
 
   @override
   Future<void> onLoad() async {
-    add(CircleHitbox()..collisionType = CollisionType.passive);
-    enemyType == "Flying"
-        ? sprite = await Sprite.load('enemies/bat.png')
-        : sprite = await Sprite.load('enemies/blob.png');
-    
+    add(CircleHitbox()..collisionType = CollisionType.active);
 
-    if (enemyType == "Flying") {
+    sprite = await Sprite.load('enemies/$enemyType.png');
+
+    if (enemyType == "flying") {
+      size = Vector2.all(32);
       await add(
         MoveEffect.by(
           Vector2(0, -6),
@@ -57,7 +58,11 @@ class Enemy extends SpriteComponent
 
   @override
   void update(double dt) {
-    position.x += velocityX * dt;
+    if (enemyType == "flying") {
+      flying(dt);
+    } else if (enemyType == "ground") {
+      jumping(dt);
+    }
 
     if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
@@ -84,5 +89,35 @@ class Enemy extends SpriteComponent
       );
     }
     super.onCollisionStart(intersectionPoints, other);
+  }
+
+  // Move enemy constantly left
+  void flying(double dt) {
+    position.x += velocityX * dt;
+  }
+
+  void jumping(double dt) {
+    jumpTime += dt;
+    if (jumpTime > 3) {
+      jumpTime = 0;
+      add(
+        MoveEffect.by(
+          Vector2(0, -48),
+          EffectController(
+            duration: 1,
+            alternate: true,
+            curve: Curves.elasticIn,
+          ),
+        ),
+      );
+      add(
+        MoveEffect.by(
+          Vector2(-100, 0),
+          EffectController(
+            duration: 2,
+          ),
+        ),
+      );
+    }
   }
 }

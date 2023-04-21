@@ -35,11 +35,16 @@ class GamePlay extends Component
     // Loading in the image assets
     await gameRef.images.loadAll([
       'player/run.png',
+      'player/fire_run.png',
+      'player/fire_jump.png',
+      'player/fire_fall.png',
+      'player/fire_attack.png',
       'items/coin.png',
       'items/fireball.png',
       'items/ember.png',
-      'enemies/bat.png',
-      'enemies/blob.png',
+      'items/bolt.png',
+      'enemies/flying.png',
+      'enemies/ground.png',
       'hud/heart.png',
       'hud/jump.png',
       'hud/attack.png',
