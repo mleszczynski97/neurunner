@@ -35,7 +35,7 @@ class Coin extends SpriteComponent
     // Keeps the coin bouncing
     await add(
       MoveEffect.by(
-        Vector2(0, -6),
+        Vector2(0, -5),
         EffectController(
           alternate: true,
           infinite: true,

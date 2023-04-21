@@ -35,7 +35,7 @@ class Ember extends SpriteComponent
     // Keeps the ember bouncing
     await add(
       MoveEffect.by(
-        Vector2(0, -3),
+        Vector2(0, -5),
         EffectController(
           alternate: true,
           infinite: true,

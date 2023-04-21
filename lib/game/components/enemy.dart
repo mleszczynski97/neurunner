@@ -10,8 +10,12 @@ import 'package:neurunner/game/managers/audio_manager.dart';
 
 class Enemy extends SpriteComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
+  String enemyType;
+  double velocityX = -50.0;
+
   Enemy({
     required Vector2 position,
+    required this.enemyType,
     Vector2? size,
     Vector2? scale,
     double? angle,
@@ -27,24 +31,28 @@ class Enemy extends SpriteComponent
         ) {
     //debugMode = true;
   }
-  double velocityX = -50.0;
 
   @override
   Future<void> onLoad() async {
     add(CircleHitbox()..collisionType = CollisionType.passive);
-    sprite = await Sprite.load('enemies/bat.png');
+    enemyType == "Flying"
+        ? sprite = await Sprite.load('enemies/bat.png')
+        : sprite = await Sprite.load('enemies/blob.png');
+    
 
-    await add(
-      MoveEffect.by(
-        Vector2(0, -6),
-        EffectController(
-          alternate: true,
-          infinite: true,
-          duration: 0.5,
-          curve: Curves.ease,
+    if (enemyType == "Flying") {
+      await add(
+        MoveEffect.by(
+          Vector2(0, -6),
+          EffectController(
+            alternate: true,
+            infinite: true,
+            duration: 0.5,
+            curve: Curves.ease,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
   @override

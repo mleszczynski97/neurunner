@@ -65,7 +65,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
     healthTextComponent = TextComponent(
       text: '100',
-      position: Vector2(24, 20),
+      position: Vector2(25, 20),
       anchor: Anchor.topCenter,
       scale: Vector2.all(0.5),
     );
@@ -75,7 +75,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
       game.images.fromCache('hud/embers_hud_0.png'),
       position: Vector2(320, 256),
       anchor: Anchor.bottomCenter,
-      size: Vector2(76, 42),
+      size: Vector2(64, 32),
     );
     add(embersComponent);
 
