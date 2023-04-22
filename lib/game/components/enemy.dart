@@ -102,19 +102,25 @@ class Enemy extends SpriteComponent
       jumpTime = 0;
       add(
         MoveEffect.by(
-          Vector2(0, -48),
-          EffectController(
-            duration: 1,
-            alternate: true,
-            curve: Curves.elasticIn,
-          ),
-        ),
+            Vector2(0, -48),
+            EffectController(
+              duration: 0.75,
+              curve: Curves.elasticOut,
+            ), onComplete: () {
+          add(MoveEffect.by(
+            Vector2(0, 48),
+            EffectController(
+              duration: 0.75,
+              curve: Curves.elasticIn,
+            ),
+          ));
+        }),
       );
       add(
         MoveEffect.by(
           Vector2(-100, 0),
           EffectController(
-            duration: 2,
+            duration: 1.5,
           ),
         ),
       );

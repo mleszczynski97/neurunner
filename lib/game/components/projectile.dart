@@ -42,11 +42,11 @@ class Projectile extends SpriteAnimationComponent
 
     await add(
       MoveEffect.by(
-        Vector2(0, -2),
+        Vector2(0, -10),
         EffectController(
           alternate: true,
           infinite: true,
-          duration: 0.5,
+          duration: 0.3,
           curve: Curves.ease,
         ),
       ),

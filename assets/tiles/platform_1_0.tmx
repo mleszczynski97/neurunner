@@ -7,9 +7,6 @@
   </data>
  </layer>
  <objectgroup id="5" name="Spawnables">
-  <object id="16" class="Heart" x="576" y="192" width="16" height="16"/>
-  <object id="17" class="Heart" x="608" y="192" width="16" height="16"/>
-  <object id="18" class="Heart" x="640" y="192" width="16" height="16"/>
   <object id="21" class="Ember" x="432" y="192" width="16" height="16"/>
   <object id="23" class="Ember" x="464" y="192" width="16" height="16"/>
   <object id="24" class="Ember" x="496" y="192" width="16" height="16"/>

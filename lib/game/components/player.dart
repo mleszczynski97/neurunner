@@ -164,7 +164,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
   //Attack method, called when user taps on the right side of the screen
   void attack() {
-    if (gameRef.playerData.bullets.value > 0) {
+    if (gameRef.playerData.bullets.value > 0 && !_isAttacking) {
       
       _isAttacking = true;
       animation = swing;

@@ -25,8 +25,8 @@
   <object id="7" x="0" y="224" width="800" height="32"/>
  </objectgroup>
  <objectgroup id="3" name="Spawnables">
-  <object id="9" class="Heart" x="320" y="192" width="16" height="16"/>
-  <object id="10" class="Heart" x="368" y="192" width="16" height="16"/>
-  <object id="11" class="Heart" x="416" y="192" width="16" height="16"/>
+  <object id="9" class="Ember" x="320" y="192" width="16" height="16"/>
+  <object id="10" class="Ember" x="368" y="192" width="16" height="16"/>
+  <object id="11" class="Ember" x="416" y="192" width="16" height="16"/>
  </objectgroup>
 </map>
