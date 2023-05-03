@@ -8,12 +8,12 @@ import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
 import 'package:neurunner/game/managers/audio_manager.dart';
 
-class Enemy extends SpriteComponent
+class Enemy extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
   String enemyType;
   double velocityX = -50.0;
-  double jumpTime = 0;
   double jumpVelocity = -100.0;
+  double jumpTime = 0;
 
   Enemy({
     required Vector2 position,
@@ -38,10 +38,28 @@ class Enemy extends SpriteComponent
   Future<void> onLoad() async {
     add(CircleHitbox()..collisionType = CollisionType.active);
 
-    sprite = await Sprite.load('enemies/$enemyType.png');
+    enemyType == "flying"
+        ? animation = SpriteAnimation.fromFrameData(
+            game.images.fromCache('enemies/${enemyType}1.png'),
+            SpriteAnimationData.sequenced(
+              amount: 7,
+              textureSize: Vector2(32, 32),
+              stepTime: 0.1,
+            ),
+          )
+        : animation = SpriteAnimation.fromFrameData(
+            game.images.fromCache('enemies/${enemyType}1.png'),
+            SpriteAnimationData.sequenced(
+              amount: 1,
+              textureSize: Vector2(32, 32),
+              stepTime: 0.1,
+            ),
+          );
+
+    //await Sprite.load('enemies/$enemyType.png');
 
     if (enemyType == "flying") {
-      size = Vector2.all(32);
+      size = Vector2.all(24);
       await add(
         MoveEffect.by(
           Vector2(0, -6),
@@ -58,16 +76,19 @@ class Enemy extends SpriteComponent
 
   @override
   void update(double dt) {
+    // Choosing movement pattern based on the type of the enemy
     if (enemyType == "flying") {
       flying(dt);
     } else if (enemyType == "ground") {
       jumping(dt);
     }
 
+    // Remove the component whenever it moves out of the screeen
     if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
       //print('Enemy removed');
     }
+
     super.update(dt);
   }
 
@@ -102,19 +123,23 @@ class Enemy extends SpriteComponent
       jumpTime = 0;
       add(
         MoveEffect.by(
-            Vector2(0, -48),
-            EffectController(
-              duration: 0.75,
-              curve: Curves.elasticOut,
-            ), onComplete: () {
-          add(MoveEffect.by(
-            Vector2(0, 48),
-            EffectController(
-              duration: 0.75,
-              curve: Curves.elasticIn,
-            ),
-          ));
-        }),
+          Vector2(0, -48),
+          EffectController(
+            duration: 0.75,
+            curve: Curves.elasticOut,
+          ),
+          onComplete: () {
+            add(
+              MoveEffect.by(
+                Vector2(0, 48),
+                EffectController(
+                  duration: 0.75,
+                  curve: Curves.elasticIn,
+                ),
+              ),
+            );
+          },
+        ),
       );
       add(
         MoveEffect.by(
