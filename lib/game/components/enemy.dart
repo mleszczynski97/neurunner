@@ -14,6 +14,8 @@ class Enemy extends SpriteAnimationComponent
   double velocityX = -50.0;
   double jumpVelocity = -100.0;
   double jumpTime = 0;
+  late SpriteAnimation groundJump, groundIdle;
+  late SpriteAnimation flyingFly;
 
   Enemy({
     required Vector2 position,
@@ -25,10 +27,10 @@ class Enemy extends SpriteAnimationComponent
     int? priority,
   }) : super(
           position: position,
-          size: Vector2.all(16),
+          size: Vector2.all(24),
           scale: scale,
           angle: angle,
-          anchor: anchor,
+          anchor: Anchor.bottomLeft,
           priority: priority,
         ) {
     //debugMode = true;
@@ -36,28 +38,18 @@ class Enemy extends SpriteAnimationComponent
 
   @override
   Future<void> onLoad() async {
+    // Adding a circular active hitbox
     add(CircleHitbox()..collisionType = CollisionType.active);
+    
+    // Loading all necessary animations for all types of enemies
+    loadAnimations();
 
+    // Checking which enemy was loaded and initializing their idle animation
     enemyType == "flying"
-        ? animation = SpriteAnimation.fromFrameData(
-            game.images.fromCache('enemies/${enemyType}1.png'),
-            SpriteAnimationData.sequenced(
-              amount: 7,
-              textureSize: Vector2(32, 32),
-              stepTime: 0.1,
-            ),
-          )
-        : animation = SpriteAnimation.fromFrameData(
-            game.images.fromCache('enemies/${enemyType}1.png'),
-            SpriteAnimationData.sequenced(
-              amount: 1,
-              textureSize: Vector2(32, 32),
-              stepTime: 0.1,
-            ),
-          );
+        ? animation = flyingFly
+        : animation = groundIdle;
 
-    //await Sprite.load('enemies/$enemyType.png');
-
+    // Adding a midair wobble effect to enemies of 'flying' type
     if (enemyType == "flying") {
       size = Vector2.all(24);
       await add(
@@ -76,7 +68,7 @@ class Enemy extends SpriteAnimationComponent
 
   @override
   void update(double dt) {
-    // Choosing movement pattern based on the type of the enemy
+    // Choosing movement pattern method based on the type of the enemy
     if (enemyType == "flying") {
       flying(dt);
     } else if (enemyType == "ground") {
@@ -86,7 +78,6 @@ class Enemy extends SpriteAnimationComponent
     // Remove the component whenever it moves out of the screeen
     if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();
-      //print('Enemy removed');
     }
 
     super.update(dt);
@@ -95,9 +86,11 @@ class Enemy extends SpriteAnimationComponent
   @override
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
+    // Player collision -> player receives damage
     if (other is NeurunnerPlayer) {
       gameRef.player.hit();
     }
+    // Projectile collision -> enemy removed after fade out time
     if (other is Projectile) {
       add(
         OpacityEffect.fadeOut(
@@ -121,20 +114,31 @@ class Enemy extends SpriteAnimationComponent
     jumpTime += dt;
     if (jumpTime > 3) {
       jumpTime = 0;
+      animation = SpriteAnimation.fromFrameData(
+        game.images.fromCache('enemies/${enemyType}1.png'),
+        SpriteAnimationData.sequenced(
+          amount: 8,
+          textureSize: Vector2(24, 24),
+          stepTime: 0.1,
+          loop: false,
+        ),
+      );
       add(
         MoveEffect.by(
           Vector2(0, -48),
           EffectController(
-            duration: 0.75,
-            curve: Curves.elasticOut,
+            duration: 0.5,
+            //curve: Curves.elasticOut,
+            curve: Curves.decelerate,
           ),
           onComplete: () {
             add(
               MoveEffect.by(
                 Vector2(0, 48),
                 EffectController(
-                  duration: 0.75,
-                  curve: Curves.elasticIn,
+                  duration: 0.3,
+                  //curve: Curves.elasticIn,
+                  curve: Curves.easeIn,
                 ),
               ),
             );
@@ -145,10 +149,54 @@ class Enemy extends SpriteAnimationComponent
         MoveEffect.by(
           Vector2(-100, 0),
           EffectController(
-            duration: 1.5,
+            duration: 0.8,
           ),
+          onComplete: () {
+            animation = SpriteAnimation.fromFrameData(
+              game.images.fromCache('enemies/${enemyType}1_idle.png'),
+              SpriteAnimationData.sequenced(
+                amount: 4,
+                textureSize: Vector2(24, 24),
+                stepTime: 0.1,
+              ),
+            );
+          },
         ),
       );
     }
+  }
+
+  void loadAnimations() {
+    
+    // Idle animation for ground enemies
+    groundIdle = SpriteAnimation.fromFrameData(
+      game.images.fromCache('enemies/ground1_idle.png'),
+      SpriteAnimationData.sequenced(
+        amount: 4,
+        textureSize: Vector2(24, 24),
+        stepTime: 0.1,
+      ),
+    );
+    
+    // Jump animation for ground enemies
+    groundJump = SpriteAnimation.fromFrameData(
+      game.images.fromCache('enemies/ground1.png'),
+      SpriteAnimationData.sequenced(
+        amount: 8,
+        textureSize: Vector2(24, 24),
+        stepTime: 0.1,
+        loop: false,
+      ),
+    );
+    
+    // Fly animation for flying enemies
+    flyingFly = SpriteAnimation.fromFrameData(
+      game.images.fromCache('enemies/flying1.png'),
+      SpriteAnimationData.sequenced(
+        amount: 7,
+        textureSize: Vector2(32, 32),
+        stepTime: 0.1,
+      ),
+    );
   }
 }

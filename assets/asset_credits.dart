@@ -17,3 +17,5 @@
 
 // Fireball projectile - Artwork created by Luis Zuno (@ansimuz)
 // https://ansimuz.itch.io/warped-shooting-fx
+
+// Flying Enemy -

@@ -30,10 +30,10 @@
   <object id="54" class="Coin" x="480" y="192" width="16" height="16"/>
   <object id="55" class="Coin" x="528" y="192" width="16" height="16"/>
   <object id="56" class="Coin" x="576" y="192" width="16" height="16"/>
-  <object id="58" class="GroundEnemy" x="768" y="208" width="16" height="16"/>
+  <object id="58" class="GroundEnemy" x="752" y="192" width="32" height="32"/>
   <object id="59" class="FlyingEnemy" x="640" y="48" width="32" height="32"/>
   <object id="60" class="Ember" x="368" y="48" width="16" height="16"/>
-  <object id="61" class="GroundEnemy" x="448" y="208" width="16" height="16"/>
-  <object id="62" class="GroundEnemy" x="272" y="208" width="16" height="16"/>
+  <object id="61" class="GroundEnemy" x="448" y="192" width="32" height="32"/>
+  <object id="62" class="GroundEnemy" x="256" y="192" width="32" height="32"/>
  </objectgroup>
 </map>
