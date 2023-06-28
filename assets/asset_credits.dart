@@ -19,3 +19,7 @@
 // https://ansimuz.itch.io/warped-shooting-fx
 
 // Flying Enemy -
+
+// Slime enemy -
+
+// Shooting enemy -

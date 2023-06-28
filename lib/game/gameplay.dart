@@ -47,6 +47,7 @@ class GamePlay extends Component
       'enemies/flying1.png',
       'enemies/ground1.png',
       'enemies/ground1_idle.png',
+      'enemies/shootingAttack.png',
       'hud/heart.png',
       'hud/jump.png',
       'hud/attack.png',

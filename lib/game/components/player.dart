@@ -165,13 +165,13 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   //Attack method, called when user taps on the right side of the screen
   void attack() {
     if (gameRef.playerData.bullets.value > 0 && !_isAttacking) {
-      
       _isAttacking = true;
       animation = swing;
 
       gameRef.playerData.bullets.value--;
       final projectile = Projectile(
-        position: Vector2(position.x + 48, position.y-5),
+        position: Vector2(position.x + 48, position.y - 5),
+        projectileType: "player",
       );
       gameRef.add(projectile);
     }

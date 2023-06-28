@@ -3,14 +3,17 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/animation.dart';
 import 'package:neurunner/game/components/enemy.dart';
+import 'package:neurunner/game/components/player.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
 import 'package:neurunner/game/managers/audio_manager.dart';
 
 class Projectile extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
+  String projectileType;
   Projectile({
     required Vector2 position,
+    required this.projectileType,
     Vector2? size,
     Vector2? scale,
     double? angle,
@@ -55,10 +58,14 @@ class Projectile extends SpriteAnimationComponent
 
   @override
   void update(double dt) {
-    velocityX = gameRef.player.velocityX + 150;
+    projectileType == "player"
+        ? velocityX = gameRef.player.velocityX + 150
+        : velocityX = - 150;
+
     position.x += velocityX * dt;
+
     if (position.x > gameRef.player.x + size.x + constants.viewportWidth / 2) {
-      removeFromParent();
+      //removeFromParent();
     }
     super.update(dt);
   }
@@ -66,7 +73,7 @@ class Projectile extends SpriteAnimationComponent
   @override
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
-    if (other is Enemy) {
+    if (other is Enemy && projectileType == "player") {
       add(
         OpacityEffect.fadeOut(
           LinearEffectController(0.1),
@@ -76,6 +83,9 @@ class Projectile extends SpriteAnimationComponent
           },
         ),
       );
+    }
+    if(other is NeurunnerPlayer && projectileType == "enemy") {
+      gameRef.player.hit();
     }
     super.onCollisionStart(intersectionPoints, other);
   }

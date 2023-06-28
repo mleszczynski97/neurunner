@@ -93,7 +93,7 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
           break;
         case 'FlyingEnemy':
           final enemy = Enemy(
-            // Y + 32 to account for bottomLeft anchor 
+            // Y + 32 to account for bottomLeft anchor
             position: position + Vector2(0, 32),
             size: Vector2.all(32),
             enemyType: "flying",
@@ -102,10 +102,19 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
           break;
         case 'GroundEnemy':
           final enemy = Enemy(
-            // Y + 32 to account for bottomLeft anchor 
+            // Y + 32 to account for bottomLeft anchor
             position: position + Vector2(0, 32),
             size: Vector2.all(32),
             enemyType: "ground",
+          );
+          add(enemy);
+          break;
+        case 'ShootingEnemy':
+          final enemy = Enemy(
+            // Y + 32 to account for bottomLeft anchor
+            position: position + Vector2(0, 32),
+            size: Vector2.all(32),
+            enemyType: "shooting",
           );
           add(enemy);
           break;
