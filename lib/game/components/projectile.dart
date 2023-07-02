@@ -11,6 +11,8 @@ import 'package:neurunner/game/managers/audio_manager.dart';
 class Projectile extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
   String projectileType;
+  late SpriteAnimation playerProjectile, enemyProjectile;
+
   Projectile({
     required Vector2 position,
     required this.projectileType,
@@ -34,14 +36,14 @@ class Projectile extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     add(CircleHitbox()..collisionType = CollisionType.active);
-    animation = SpriteAnimation.fromFrameData(
-      gameRef.images.fromCache('items/bolt.png'),
-      SpriteAnimationData.sequenced(
-        amount: 4,
-        textureSize: Vector2(48, 32),
-        stepTime: 0.1,
-      ),
-    );
+
+    // Loading all necessary animations for all types of projectiles
+    loadAnimations();
+
+    // Choosing an animation according to the projectile type
+    projectileType == "player"
+        ? animation = playerProjectile
+        : {animation = enemyProjectile, size = Vector2.all(8)};
 
     await add(
       MoveEffect.by(
@@ -60,7 +62,7 @@ class Projectile extends SpriteAnimationComponent
   void update(double dt) {
     projectileType == "player"
         ? velocityX = gameRef.player.velocityX + 150
-        : velocityX = - 150;
+        : velocityX = -150;
 
     position.x += velocityX * dt;
 
@@ -84,9 +86,31 @@ class Projectile extends SpriteAnimationComponent
         ),
       );
     }
-    if(other is NeurunnerPlayer && projectileType == "enemy") {
+    if (other is NeurunnerPlayer && projectileType == "enemy") {
       gameRef.player.hit();
     }
     super.onCollisionStart(intersectionPoints, other);
+  }
+
+  void loadAnimations() {
+    //Animation for player projectiles
+    playerProjectile = SpriteAnimation.fromFrameData(
+      gameRef.images.fromCache('items/bolt.png'),
+      SpriteAnimationData.sequenced(
+        amount: 4,
+        textureSize: Vector2(48, 32),
+        stepTime: 0.1,
+      ),
+    );
+
+    //Animation for enemy projectiles
+    enemyProjectile = SpriteAnimation.fromFrameData(
+      gameRef.images.fromCache('items/enemyProjectile.png'),
+      SpriteAnimationData.sequenced(
+        amount: 4,
+        textureSize: Vector2(32, 32),
+        stepTime: 0.1,
+      ),
+    );
   }
 }

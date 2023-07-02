@@ -41,6 +41,7 @@ class GamePlay extends Component
       'player/fire_attack.png',
       'items/coin.png',
       'items/fireball.png',
+      'items/enemyProjectile.png',
       'items/ember.png',
       'items/bolt.png',
       'enemies/flying.png',
