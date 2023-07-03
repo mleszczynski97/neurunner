@@ -69,15 +69,16 @@ class Enemy extends SpriteAnimationComponent
       );
     }
 
+    // Adding a move effect to shooting enemies to fly up and down
     if (enemyType == "shooting") {
-      size = Vector2.all(32);
+      size = Vector2.all(24);
       await add(
         MoveEffect.by(
           Vector2(0, -150),
           EffectController(
             alternate: true,
             infinite: true,
-            duration: 2,
+            duration: 3.5,
             curve: Curves.linear,
           ),
         ),
@@ -189,10 +190,10 @@ class Enemy extends SpriteAnimationComponent
 
   void shooting(double dt) {
     shootTime += dt;
-    if (shootTime > 3) {
+    if (shootTime > 2.5) {
       shootTime = 0;
       final projectile = Projectile(
-        position: Vector2(position.x + 48, position.y - 5),
+        position: Vector2(position.x , position.y - 20),
         projectileType: "enemy",
       );
       gameRef.add(projectile);

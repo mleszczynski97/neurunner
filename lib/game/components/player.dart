@@ -142,6 +142,10 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         position += collisionNormal.scaled(separationDistance);
         velocityY = 0;
       }
+
+      if (position.x > 1600) {
+        burn();
+      }
     }
     super.onCollision(intersectionPoints, other);
   }
@@ -174,6 +178,22 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         projectileType: "player",
       );
       gameRef.add(projectile);
+    }
+  }
+
+  // Burn method called whenever player steps on lava
+  void burn() {
+    if (!_isHurt) {
+      add(
+        ColorEffect(
+          Colors.red,
+          const Offset(0.0, 0.6),
+          EffectController(
+            duration: 1,
+            alternate: true,
+          ),
+        ),
+      );
     }
   }
 

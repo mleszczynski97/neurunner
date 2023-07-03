@@ -179,7 +179,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     // Updating the hp values displayed
     healthTextComponent.text = '${gameRef.playerData.hp.value}';
 
-    if (gameRef.playerData.hp.value == 0) {
+    if (gameRef.playerData.hp.value <= 0) {
       removeAll([
         distanceTextComponent,
         pauseButtonComponent,
