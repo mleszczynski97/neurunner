@@ -17,6 +17,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   double velocityY = 0.0;
   double velocityX = 100.0;
   double elapsedTime = 0.0;
+  double burnTick = 0.0;
   bool _isOnGround = false;
   bool _canJump = true;
   bool _isHurt = false;
@@ -24,7 +25,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   late SpriteAnimation jumpUp;
   late SpriteAnimation run;
   late SpriteAnimation jumpDown;
-  late SpriteAnimation swing;
+  late SpriteAnimation swordSwing;
 
   NeurunnerPlayer({
     required Vector2 position,
@@ -74,7 +75,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     );
 
     // Sword swing animation
-    swing = SpriteAnimation.fromFrameData(
+    swordSwing = SpriteAnimation.fromFrameData(
       game.images.fromCache('player/fire_attack.png'),
       SpriteAnimationData.sequenced(
         amount: 6,
@@ -90,31 +91,46 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   @override
   void update(double dt) {
     super.update(dt);
-    if (animation == swing && animation?.currentIndex == 5) {
+
+    // Resetting the attack animation
+    if (animation == swordSwing && animation?.currentIndex == 5) {
       animation?.currentIndex = 0;
       _isAttacking = false;
     }
 
+    // Jumping animation check
     if (velocityY != 0 && !_isAttacking) {
       velocityY > 0 ? animation = jumpDown : animation = jumpUp;
     }
 
+    // Burn condition
+    if (_isOnGround && position.x > 160) {
+      burnTick += dt;
+      //print(burnTick);
+      if (position.x / 10 > 10) {
+        burn();
+      }
+    }
+
     elapsedTime += dt;
+    // Updating every 60 ticks
     if (elapsedTime > (1 / 60)) {
       elapsedTime = 0.0;
+      // Position /10 is equal to distance traveled in meters
       gameRef.playerData.distance.value = position.x ~/ 10;
-      // v = u + at
+      // Updating the vertical velocity according to v = u + at
       velocityY += gravity;
       velocityY = velocityY.clamp(-300, 300);
     }
 
-    // d = d0 + v * t
+    // Updating the position of the player according to d = d0 + v * t
     position.y += velocityY * dt;
     position.x += velocityX * dt;
 
-    if (position.y > gameRef.size.y) {
-      gameRef.playerData.hp.value = 0;
-    }
+    // Death condition for falling out of the screen
+    // if (position.y > gameRef.size.y) {
+    //   gameRef.playerData.hp.value = 0;
+    // }
   }
 
   @override
@@ -142,10 +158,6 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         position += collisionNormal.scaled(separationDistance);
         velocityY = 0;
       }
-
-      if (position.x > 1600) {
-        burn();
-      }
     }
     super.onCollision(intersectionPoints, other);
   }
@@ -154,6 +166,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   void jump() {
     if (_isOnGround) {
       // First jump
+      burnTick = 0;
       velocityY = -300;
       _isOnGround = false;
       _canJump = true;
@@ -170,7 +183,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   void attack() {
     if (gameRef.playerData.bullets.value > 0 && !_isAttacking) {
       _isAttacking = true;
-      animation = swing;
+      animation = swordSwing;
 
       gameRef.playerData.bullets.value--;
       final projectile = Projectile(
@@ -183,13 +196,15 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
   // Burn method called whenever player steps on lava
   void burn() {
-    if (!_isHurt) {
+    if (burnTick > 2) {
+      burnTick = 0;
+      gameRef.playerData.hp.value--;
       add(
         ColorEffect(
-          Colors.red,
+          Colors.orange,
           const Offset(0.0, 0.6),
           EffectController(
-            duration: 1,
+            duration: 0.5,
             alternate: true,
           ),
         ),
