@@ -1,7 +1,8 @@
 // Level 1 platform modules
 List<String> platformModules1 = [
   'platform_1_0.tmx',
-  'platform_1_1.tmx',
+  'platform_1_0.tmx',
+  //'platform_1_1.tmx',
 ];
 
 // Level 2 platform modules
@@ -27,3 +28,10 @@ List<String> platformModules5 = [
   'platform_5_0.tmx',
   'platform_5_1.tmx',
 ];
+
+// Level 5 platform modules
+List<String> platformModulesFinish = [
+  'platform_1_0.tmx',
+  'platform_1_0.tmx',
+];
+

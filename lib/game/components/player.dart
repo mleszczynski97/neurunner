@@ -198,14 +198,15 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   void burn() {
     if (burnTick > 2) {
       burnTick = 0;
-      gameRef.playerData.hp.value--;
+      gameRef.playerData.hp.value -= 3;
       add(
         ColorEffect(
           Colors.orange,
           const Offset(0.0, 0.6),
           EffectController(
-            duration: 0.5,
+            duration: 0.15,
             alternate: true,
+            repeatCount: 3,
           ),
         ),
       );

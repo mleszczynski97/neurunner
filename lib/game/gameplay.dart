@@ -162,9 +162,10 @@ class GamePlay extends Component
         break;
       case 5:
         {
-          AudioManager.stopBgm();
-          gameRef.pauseEngine();
-          gameRef.overlays.add(GameOver.id);
+          loadPlatformModule(platformModulesFinish.elementAt(0));
+          // AudioManager.stopBgm();
+          // gameRef.pauseEngine();
+          // gameRef.overlays.add(GameOver.id);
         }
         break;
     }

@@ -144,7 +144,9 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
   }
 
   void onDistanceChange() {
+    // Updating the meter counter
     distanceTextComponent.text = '${gameRef.playerData.distance.value}m';
+    // Displaying a level HUD element at the start of each level
     if (gameRef.playerData.distance.value % 800 == 0) {
       final int level = (gameRef.playerData.distance.value ~/ 800) + 1;
       final String path = 'hud/level$level.png';
