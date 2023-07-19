@@ -152,7 +152,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
       final String path = 'hud/level$level.png';
       levelComponent.sprite = Sprite(game.images.fromCache(path));
       level == 1
-          ? gameRef.player.velocityX = 100
+          ? gameRef.player.velocityX = 150
           : gameRef.player.velocityX += 25;
       levelComponent.add(OpacityEffect.fadeIn(EffectController(
         duration: 3,

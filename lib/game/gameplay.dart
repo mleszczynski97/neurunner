@@ -63,10 +63,11 @@ class GamePlay extends Component
       'hud/level3.png',
       'hud/level4.png',
       'hud/level5.png',
+      'hud/level6.png',
     ]);
 
     // Loading in the parallax background
-    ParallaxComponent forestBackground = await gameRef.loadParallaxComponent(
+    forestBackground = await gameRef.loadParallaxComponent(
       [
         ParallaxImageData('background/001_sky.png'),
         ParallaxImageData('background/002_shadow.png'),
@@ -110,6 +111,8 @@ class GamePlay extends Component
       var levelIndex = moduleCounter ~/ 10;
       loadNextModule(levelIndex, moduleCounter);
     }
+
+    
     super.update(dt);
   }
 
@@ -127,6 +130,7 @@ class GamePlay extends Component
       case 1:
         {
           // Second level
+          forestBackground.parallax?.baseVelocity += Vector2(5, 0);
           final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules2.elementAt(0))
@@ -136,6 +140,7 @@ class GamePlay extends Component
       case 2:
         {
           // Third level
+          forestBackground.parallax?.baseVelocity += Vector2(5, 0);
           final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules3.elementAt(0))
@@ -145,6 +150,7 @@ class GamePlay extends Component
       case 3:
         {
           // Fourth level
+          forestBackground.parallax?.baseVelocity += Vector2(5, 0);
           final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules4.elementAt(0))
@@ -154,6 +160,7 @@ class GamePlay extends Component
       case 4:
         {
           // Fifth level
+          forestBackground.parallax?.baseVelocity += Vector2(5, 0);
           final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules5.elementAt(0))

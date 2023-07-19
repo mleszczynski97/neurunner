@@ -15,7 +15,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
   final Vector2 _up = Vector2(0, -1);
   double velocityY = 0.0;
-  double velocityX = 100.0;
+  double velocityX = 150.0;
   double elapsedTime = 0.0;
   double burnTick = 0.0;
   bool _isOnGround = false;
@@ -103,13 +103,11 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       velocityY > 0 ? animation = jumpDown : animation = jumpUp;
     }
 
-    // Burn condition
-    if (_isOnGround && position.x > 160) {
+    // Burn condition at distance 3200 (level 5)
+    if (_isOnGround && position.x > 32000) {
       burnTick += dt;
       //print(burnTick);
-      if (position.x / 10 > 10) {
-        burn();
-      }
+      burn();
     }
 
     elapsedTime += dt;
@@ -126,11 +124,6 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     // Updating the position of the player according to d = d0 + v * t
     position.y += velocityY * dt;
     position.x += velocityX * dt;
-
-    // Death condition for falling out of the screen
-    // if (position.y > gameRef.size.y) {
-    //   gameRef.playerData.hp.value = 0;
-    // }
   }
 
   @override
@@ -146,15 +139,13 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         final separationDistance = (size.y / 2) - collisionNormal.length;
         collisionNormal.normalize();
 
-        // If collision normal is almost upwards,
-        // player must be on ground.
+        // If collision normal is almost upwards, player must be on ground.
         if (_up.dot(collisionNormal) > 0.9) {
           _isOnGround = true;
           if (!_isAttacking) animation = run;
         }
 
-        // Resolve collision by moving player along
-        // collision normal by separation distance.
+        // Resolve collision by moving player along collision normal by separation distance.
         position += collisionNormal.scaled(separationDistance);
         velocityY = 0;
       }
@@ -164,6 +155,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
   //Jump method, called when user taps on the left side of the screen
   void jump() {
+    // Only initialize jump sequence when on ground
     if (_isOnGround) {
       // First jump
       burnTick = 0;
@@ -186,6 +178,8 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       animation = swordSwing;
 
       gameRef.playerData.bullets.value--;
+
+      // Create an instance of projectile class 
       final projectile = Projectile(
         position: Vector2(position.x + 48, position.y - 5),
         projectileType: "player",
