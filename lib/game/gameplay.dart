@@ -112,6 +112,11 @@ class GamePlay extends Component
       loadNextModule(levelIndex, moduleCounter);
     }
 
+    if (gameRef.playerData.distance.value % 800 == 0 && gameRef.playerData.distance.value != 0 )
+    {
+      forestBackground.parallax?.baseVelocity += Vector2(25, 0);
+    }
+
     
     super.update(dt);
   }
@@ -130,7 +135,6 @@ class GamePlay extends Component
       case 1:
         {
           // Second level
-          forestBackground.parallax?.baseVelocity += Vector2(5, 0);
           final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules2.elementAt(0))
@@ -140,7 +144,6 @@ class GamePlay extends Component
       case 2:
         {
           // Third level
-          forestBackground.parallax?.baseVelocity += Vector2(5, 0);
           final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules3.elementAt(0))
@@ -150,7 +153,6 @@ class GamePlay extends Component
       case 3:
         {
           // Fourth level
-          forestBackground.parallax?.baseVelocity += Vector2(5, 0);
           final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules4.elementAt(0))
@@ -160,7 +162,6 @@ class GamePlay extends Component
       case 4:
         {
           // Fifth level
-          forestBackground.parallax?.baseVelocity += Vector2(5, 0);
           final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
           moduleCounter == levelIndex * 10
               ? loadPlatformModule(platformModules5.elementAt(0))

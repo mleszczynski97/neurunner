@@ -154,6 +154,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
       level == 1
           ? gameRef.player.velocityX = 150
           : gameRef.player.velocityX += 25;
+      
       levelComponent.add(OpacityEffect.fadeIn(EffectController(
         duration: 3,
         alternate: true,

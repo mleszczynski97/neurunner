@@ -42,20 +42,25 @@ class Projectile extends SpriteAnimationComponent
 
     // Choosing an animation according to the projectile type
     projectileType == "player"
-        ? animation = playerProjectile
-        : {animation = enemyProjectile, size = Vector2.all(8)};
+        ? {
+            animation = playerProjectile,
+            await add(
+              MoveEffect.by(
+                Vector2(0, -10),
+                EffectController(
+                  alternate: true,
+                  infinite: true,
+                  duration: 0.3,
+                  curve: Curves.ease,
+                ),
+              ),
+            )
+          }
+        : {
+            animation = enemyProjectile,
+            size = Vector2(32, 20),
+          };
 
-    await add(
-      MoveEffect.by(
-        Vector2(0, -10),
-        EffectController(
-          alternate: true,
-          infinite: true,
-          duration: 0.3,
-          curve: Curves.ease,
-        ),
-      ),
-    );
   }
 
   @override
@@ -108,7 +113,7 @@ class Projectile extends SpriteAnimationComponent
       gameRef.images.fromCache('items/enemyProjectile.png'),
       SpriteAnimationData.sequenced(
         amount: 4,
-        textureSize: Vector2(32, 32),
+        textureSize: Vector2(64, 32),
         stepTime: 0.1,
       ),
     );
