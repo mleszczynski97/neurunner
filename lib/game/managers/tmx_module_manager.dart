@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame_tiled/flame_tiled.dart';
 import 'package:neurunner/game/components/ember.dart';
 import 'package:neurunner/game/components/enemy.dart';
+import 'package:neurunner/game/components/mushroom.dart';
 import 'package:neurunner/game/components/spike.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/components/platform.dart';
@@ -90,6 +91,13 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
             size: Vector2.all(16),
           );
           add(spike);
+          break;
+          case 'Mushroom':
+          final mushroom = Mushroom(
+            position: position + Vector2(16, 32),
+            size: Vector2.all(32),
+          );
+          add(mushroom);
           break;
         case 'FlyingEnemy':
           final enemy = Enemy(

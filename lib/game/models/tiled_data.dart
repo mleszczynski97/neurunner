@@ -1,7 +1,7 @@
 // Level 1 platform modules
 List<String> platformModules1 = [
   'platform_1_0.tmx',
-  'platform_1_1.tmx',
+  'platform_1_0.tmx',
   //'platform_1_1.tmx',
 ];
 

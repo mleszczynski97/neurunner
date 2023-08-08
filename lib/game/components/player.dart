@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:neurunner/game/components/mushroom.dart';
 import 'package:neurunner/game/components/projectile.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/components/platform.dart';
@@ -118,7 +119,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
       gameRef.playerData.distance.value = position.x ~/ 10;
       // Updating the vertical velocity according to v = u + at
       velocityY += gravity;
-      velocityY = velocityY.clamp(-300, 300);
+      velocityY = velocityY.clamp(-500, 300);
     }
 
     // Updating the position of the player according to d = d0 + v * t
@@ -150,6 +151,26 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         velocityY = 0;
       }
     }
+
+    if (other is Mushroom) {
+      if (intersectionPoints.length == 2) {
+        // Calculate the collision normal and separation distance.
+        final mid = (intersectionPoints.elementAt(0) +
+                intersectionPoints.elementAt(1)) /
+            2;
+
+        final collisionNormal = absoluteCenter - mid;
+        collisionNormal.normalize();
+
+        // If collision normal is almost upwards, player must be on ground.
+        if (_up.dot(collisionNormal) > 0.6) {
+          _isOnGround = true;
+          if (velocityY > 100) {
+            shroomJump();
+          }
+        }
+      }
+    }
     super.onCollision(intersectionPoints, other);
   }
 
@@ -171,6 +192,24 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     }
   }
 
+  //Jump method, called when user taps on the left side of the screen
+  void shroomJump() {
+    // Only initialize jump sequence when on ground
+    if (_isOnGround) {
+      // First jump
+      burnTick = 0;
+      velocityY = -470;
+      _isOnGround = false;
+      _canJump = true;
+      AudioManager.playSfx('Jump_17.wav');
+    } else if (_canJump) {
+      // Allow double jump
+      velocityY = -250;
+      _canJump = false;
+      AudioManager.playSfx('Jump_8.wav');
+    }
+  }
+
   //Attack method, called when user taps on the right side of the screen
   void attack() {
     if (gameRef.playerData.bullets.value > 0 && !_isAttacking) {
@@ -179,7 +218,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
       gameRef.playerData.bullets.value--;
 
-      // Create an instance of projectile class 
+      // Create an instance of projectile class
       final projectile = Projectile(
         position: Vector2(position.x + 48, position.y - 5),
         projectileType: "player",

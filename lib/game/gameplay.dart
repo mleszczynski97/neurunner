@@ -44,6 +44,7 @@ class GamePlay extends Component
       'items/enemyProjectile.png',
       'items/ember.png',
       'items/bolt.png',
+      'items/mushroom.png',
       'enemies/flying.png',
       'enemies/flying1.png',
       'enemies/ground1.png',
