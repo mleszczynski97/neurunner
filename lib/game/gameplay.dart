@@ -22,52 +22,39 @@ class GamePlay extends Component
 
   @override
   Future<void> onLoad() async {
-    //AudioManager.playBgm('Glorious_morning.mp3');
+    // AudioManager.playBgm('Glorious_morning.mp3');
     await initializeGame();
+
+    // Reset the player data
+    resetPlayerData();
+
+    // Initialize HUD and resume the engine
     gameRef.add(hud);
-    gameRef.playerData.hp.value = 100;
-    gameRef.playerData.distance.value = 0;
-    gameRef.playerData.coins.value = 0;
-    gameRef.playerData.bullets.value = 0;
     gameRef.resumeEngine();
   }
 
-  // Setting the initial state of the game
+  @override
+  void update(dt) {
+    if (gameRef.player.position.x >
+        constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
+      levelIndex = moduleCounter ~/ 10;
+      loadNextModule(levelIndex, moduleCounter);
+    }
+
+    if (gameRef.playerData.distance.value % 800 == 0 &&
+        gameRef.playerData.distance.value != 0) {
+      forestBackground.parallax?.baseVelocity =
+          Vector2(20 * (levelIndex + 1) - levelIndex * 5.toDouble(), 0);
+      print(forestBackground.parallax?.baseVelocity);
+    }
+
+    super.update(dt);
+  }
+
+  // Setting the initial state of each game
   Future<void> initializeGame() async {
     // Loading in the image assets
-    await gameRef.images.loadAll([
-      'player/run.png',
-      'player/fire_run.png',
-      'player/fire_jump.png',
-      'player/fire_fall.png',
-      'player/fire_attack.png',
-      'items/coin.png',
-      'items/fireball.png',
-      'items/enemyProjectile.png',
-      'items/ember.png',
-      'items/bolt.png',
-      'items/mushroom.png',
-      'enemies/flying.png',
-      'enemies/flying1.png',
-      'enemies/ground1.png',
-      'enemies/ground1_idle.png',
-      'enemies/shootingAttack.png',
-      'hud/heart.png',
-      'hud/jump.png',
-      'hud/attack.png',
-      'hud/pause.png',
-      'hud/embers_hud_0.png',
-      'hud/embers_hud_1.png',
-      'hud/embers_hud_2.png',
-      'hud/embers_hud_3.png',
-      'hud/borders_hud.png',
-      'hud/level1.png',
-      'hud/level2.png',
-      'hud/level3.png',
-      'hud/level4.png',
-      'hud/level5.png',
-      'hud/level6.png',
-    ]);
+    await gameRef.images.loadAllImages();
 
     // Loading in the parallax background
     forestBackground = await gameRef.loadParallaxComponent(
@@ -88,87 +75,57 @@ class GamePlay extends Component
       velocityMultiplierDelta: Vector2(1.1, 1.0),
       priority: -1,
     );
-
-    //Adding the background component
     gameRef.add(forestBackground);
 
-    // Loading in the player and setting up the camera
+    // Loading in the player
     gameRef.player = NeurunnerPlayer(position: constants.initPosition);
     add(gameRef.player);
+    // Focusing the camera on the player character
     setupCamera();
 
     // Adding an initial platform segment
     loadPlatformModule(platformModules1.elementAt(0));
   }
 
-  @override
-  void onRemove() {
-    //gameRef.remove(hud);
-    super.onRemove();
+  // Method used to reset the player data for each game
+  void resetPlayerData() {
+    gameRef.playerData.hp.value = 100;
+    gameRef.playerData.distance.value = 0;
+    gameRef.playerData.coins.value = 0;
+    gameRef.playerData.bullets.value = 0;
   }
 
-  @override
-  void update(dt) {
-    if (gameRef.player.position.x >
-        constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
-      levelIndex = moduleCounter ~/ 10;
-      loadNextModule(levelIndex, moduleCounter);
-    }
-
-    if (gameRef.playerData.distance.value % 800 == 0 &&
-        gameRef.playerData.distance.value != 0) {
-      forestBackground.parallax?.baseVelocity = Vector2(20*(levelIndex+1)-levelIndex*5.toDouble(), 0);
-      print(forestBackground.parallax?.baseVelocity);
-    }
-
-    super.update(dt);
-  }
-
+  // Switch for loading the proper level modules
   void loadNextModule(int levelIndex, int moduleCounter) {
     switch (levelIndex) {
       case 0:
         {
           // First level
-          final nextModule = Random().nextInt(platformModules1.length - 1) + 1;
-          moduleCounter == levelIndex * 10
-              ? loadPlatformModule(platformModules1.elementAt(0))
-              : loadPlatformModule(platformModules1.elementAt(nextModule));
+          nextPlatform(platformModules1, levelIndex);
         }
         break;
       case 1:
         {
           // Second level
-          final nextModule = Random().nextInt(platformModules2.length - 1) + 1;
-          moduleCounter == levelIndex * 10
-              ? loadPlatformModule(platformModules2.elementAt(0))
-              : loadPlatformModule(platformModules2.elementAt(nextModule));
+          nextPlatform(platformModules2, levelIndex);
         }
         break;
       case 2:
         {
           // Third level
-          final nextModule = Random().nextInt(platformModules3.length - 1) + 1;
-          moduleCounter == levelIndex * 10
-              ? loadPlatformModule(platformModules3.elementAt(0))
-              : loadPlatformModule(platformModules3.elementAt(nextModule));
+          nextPlatform(platformModules3, levelIndex);
         }
         break;
       case 3:
         {
           // Fourth level
-          final nextModule = Random().nextInt(platformModules4.length - 1) + 1;
-          moduleCounter == levelIndex * 10
-              ? loadPlatformModule(platformModules4.elementAt(0))
-              : loadPlatformModule(platformModules4.elementAt(nextModule));
+          nextPlatform(platformModules4, levelIndex);
         }
         break;
       case 4:
         {
           // Fifth level
-          final nextModule = Random().nextInt(platformModules5.length - 1) + 1;
-          moduleCounter == levelIndex * 10
-              ? loadPlatformModule(platformModules5.elementAt(0))
-              : loadPlatformModule(platformModules5.elementAt(nextModule));
+          nextPlatform(platformModules5, levelIndex);
         }
         break;
       case 5:
@@ -188,12 +145,22 @@ class GamePlay extends Component
     }
   }
 
+  // Method for randomizing and selecting the next module to be loaded
+  void nextPlatform(List<String> moduleList, int levelIndex) {
+    final nextModule = Random().nextInt(moduleList.length - 1) + 1;
+    moduleCounter == levelIndex * 10
+        ? loadPlatformModule(moduleList.elementAt(0))
+        : loadPlatformModule(moduleList.elementAt(nextModule));
+  }
+
+  // Method for loading the next module
   void loadPlatformModule(String platformName) async {
     currentPlatform = PlatformModule(platformName, moduleCounter);
     add(currentPlatform!);
     moduleCounter++;
   }
 
+  // Method for setting camera to follow the player
   void setupCamera() {
     gameRef.camera.followComponent(gameRef.player);
     gameRef.camera.worldBounds = constants.levelBounds;
