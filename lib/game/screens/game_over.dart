@@ -32,10 +32,15 @@ class GameOver extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('GAME OVER',
-                  style: TextStyle(
-                    fontSize: 64,
-                  )),
+              gameRef.playerData.distance.value >= 4000
+                  ? const Text('YOU WON!',
+                      style: TextStyle(
+                        fontSize: 64,
+                      ))
+                  : const Text('GAME OVER',
+                      style: TextStyle(
+                        fontSize: 64,
+                      )),
               Text('Final distance: ${gameRef.playerData.distance.value}m',
                   style: const TextStyle(
                     fontSize: 20,

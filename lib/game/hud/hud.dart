@@ -3,6 +3,7 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/input.dart';
 import 'package:neurunner/game/game.dart';
+import 'package:neurunner/game/gameplay.dart';
 import 'package:neurunner/game/managers/audio_manager.dart';
 import 'package:neurunner/game/screens/game_over.dart';
 import 'package:neurunner/game/screens/pause_menu.dart';
@@ -152,9 +153,9 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
       final String path = 'hud/level$level.png';
       levelComponent.sprite = Sprite(game.images.fromCache(path));
       level == 1
-          ? gameRef.player.velocityX = 150
-          : gameRef.player.velocityX += 25;
-      
+          ? gameRef.player.velocityX = 120
+          : gameRef.player.velocityX += 20;
+      print(gameRef.player.velocityX);
       levelComponent.add(OpacityEffect.fadeIn(EffectController(
         duration: 3,
         alternate: true,

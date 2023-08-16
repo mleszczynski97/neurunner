@@ -17,6 +17,8 @@ class GamePlay extends Component
   late ParallaxComponent forestBackground;
   final hud = Hud(priority: 1);
   int moduleCounter = 0;
+  bool gameOver = false;
+  int levelIndex = 0;
 
   @override
   Future<void> onLoad() async {
@@ -81,7 +83,7 @@ class GamePlay extends Component
         ParallaxImageData('background/009_trees_front.png'),
         ParallaxImageData('background/012_leaves.png'),
       ],
-      baseVelocity: Vector2(25.0, 0),
+      baseVelocity: Vector2(30.0, 0),
       size: Vector2(640, 256),
       velocityMultiplierDelta: Vector2(1.1, 1.0),
       priority: -1,
@@ -109,16 +111,16 @@ class GamePlay extends Component
   void update(dt) {
     if (gameRef.player.position.x >
         constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
-      var levelIndex = moduleCounter ~/ 10;
+      levelIndex = moduleCounter ~/ 10;
       loadNextModule(levelIndex, moduleCounter);
     }
 
-    if (gameRef.playerData.distance.value % 800 == 0 && gameRef.playerData.distance.value != 0 )
-    {
-      forestBackground.parallax?.baseVelocity += Vector2(25, 0);
+    if (gameRef.playerData.distance.value % 800 == 0 &&
+        gameRef.playerData.distance.value != 0) {
+      forestBackground.parallax?.baseVelocity = Vector2(20*(levelIndex+1)-levelIndex*5.toDouble(), 0);
+      print(forestBackground.parallax?.baseVelocity);
     }
 
-    
     super.update(dt);
   }
 
@@ -171,10 +173,16 @@ class GamePlay extends Component
         break;
       case 5:
         {
-          loadPlatformModule(platformModulesFinish.elementAt(0));
-          // AudioManager.stopBgm();
-          // gameRef.pauseEngine();
-          // gameRef.overlays.add(GameOver.id);
+          if (!gameOver) {
+            loadPlatformModule(platformModulesFinish.elementAt(0));
+            gameRef.player.velocityX = 16;
+            forestBackground.parallax?.baseVelocity = Vector2(2, 0);
+            gameOver = true;
+          } else {
+            //AudioManager.stopBgm();
+            gameRef.pauseEngine();
+            gameRef.overlays.add(GameOver.id);
+          }
         }
         break;
     }

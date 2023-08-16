@@ -16,7 +16,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
   final Vector2 _up = Vector2(0, -1);
   double velocityY = 0.0;
-  double velocityX = 150.0;
+  double velocityX = 120.0;
   double elapsedTime = 0.0;
   double burnTick = 0.0;
   bool _isOnGround = false;
