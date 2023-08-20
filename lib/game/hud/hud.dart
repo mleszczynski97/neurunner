@@ -161,6 +161,9 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
         alternate: true,
       )));
     }
+    if (gameRef.playerData.distance.value == 4040) {
+      gameRef.player.velocityX = 0; 
+    }
   }
 
   void onHpChange() {

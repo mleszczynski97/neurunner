@@ -1,14 +1,14 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:neurunner/game/components/player.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
-import 'package:neurunner/game/managers/audio_manager.dart';
 
-class Mushroom extends SpriteComponent
+// Represents a platform in the game world.
+class Saw extends SpriteAnimationComponent
     with CollisionCallbacks, HasGameRef<NeurunnerGame> {
-  Mushroom({
+  double velocityX = -50.0;
+  Saw({
     required Vector2 position,
     required Vector2 size,
     Vector2? scale,
@@ -20,7 +20,7 @@ class Mushroom extends SpriteComponent
           size: size,
           scale: scale,
           angle: angle,
-          anchor: Anchor.bottomCenter,
+          anchor: anchor,
           priority: priority,
         ) {
     //debugMode = true;
@@ -28,35 +28,38 @@ class Mushroom extends SpriteComponent
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load('items/mushroom.png');
-    add(RectangleHitbox()..collisionType = CollisionType.passive);
+    // Loading the sprite animation
+    animation = SpriteAnimation.fromFrameData(
+      game.images.fromCache('items/saw.png'),
+      SpriteAnimationData.sequenced(
+        amount: 8,
+        textureSize: Vector2(38, 38),
+        stepTime: 0.03,
+        loop: true,
+      ),
+    );
 
-    // Keeps the mushroom bouncing
-    await add(SizeEffect.by(
-        Vector2(5, -7),
-        EffectController(
-          duration: 0.3,
-          alternate: true,
-          infinite: true,
-        )));
-  }
-
-  @override
-  void update(double dt) {
-    if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
-      removeFromParent();
-      //print('Coin removed');
-    }
-    super.update(dt);
+    // Adding collision box
+    await add(RectangleHitbox()..collisionType = CollisionType.passive);
   }
 
   @override
   void onCollisionStart(
       Set<Vector2> intersectionPoints, PositionComponent other) {
+    // Player gets hurt when touching saws
     if (other is NeurunnerPlayer) {
-      //bounce
+      gameRef.player.hit();
     }
-
     super.onCollisionStart(intersectionPoints, other);
+  }
+
+  @override
+  void update(double dt) {
+    position.x += velocityX * dt;
+
+    if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
+      removeFromParent();
+    }
+    super.update(dt);
   }
 }

@@ -11,6 +11,8 @@ import 'package:neurunner/game/components/coin.dart';
 import 'package:neurunner/game/components/heart.dart';
 import 'package:neurunner/game/game_constants.dart' as constants;
 
+import '../components/saw.dart';
+
 class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
   final String platformName;
   final int moduleCounter;
@@ -92,7 +94,14 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
           );
           add(spike);
           break;
-          case 'Mushroom':
+        case 'Saw':
+          final saw = Saw(
+            position: position,
+            size: Vector2.all(18),
+          );
+          add(saw);
+          break;
+        case 'Mushroom':
           final mushroom = Mushroom(
             position: position + Vector2(16, 32),
             size: Vector2.all(32),

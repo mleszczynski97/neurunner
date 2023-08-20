@@ -4,7 +4,7 @@ import 'package:flame/parallax.dart';
 import 'package:neurunner/game/game.dart';
 import 'package:neurunner/game/managers/audio_manager.dart';
 import 'package:neurunner/game/screens/game_over.dart';
-import 'game_constants.dart' as constants;
+import 'game_constants.dart' as c;
 import 'components/player.dart';
 import 'hud/hud.dart';
 import 'managers/tmx_module_manager.dart';
@@ -12,7 +12,6 @@ import 'models/tiled_data.dart';
 
 class GamePlay extends Component
     with HasGameRef<NeurunnerGame>, ParentIsA<NeurunnerGame> {
-  //late NeurunnerPlayer player;
   PlatformModule? currentPlatform;
   late ParallaxComponent forestBackground;
   final hud = Hud(priority: 1);
@@ -36,7 +35,7 @@ class GamePlay extends Component
   @override
   void update(dt) {
     if (gameRef.player.position.x >
-        constants.moduleWidth * moduleCounter - constants.moduleWidth / 2) {
+        c.moduleWidth * moduleCounter - c.moduleWidth / 2) {
       levelIndex = moduleCounter ~/ 10;
       loadNextModule(levelIndex, moduleCounter);
     }
@@ -45,7 +44,6 @@ class GamePlay extends Component
         gameRef.playerData.distance.value != 0) {
       forestBackground.parallax?.baseVelocity =
           Vector2(20 * (levelIndex + 1) - levelIndex * 5.toDouble(), 0);
-      print(forestBackground.parallax?.baseVelocity);
     }
 
     super.update(dt);
@@ -78,7 +76,7 @@ class GamePlay extends Component
     gameRef.add(forestBackground);
 
     // Loading in the player
-    gameRef.player = NeurunnerPlayer(position: constants.initPosition);
+    gameRef.player = NeurunnerPlayer(position: c.initPosition);
     add(gameRef.player);
     // Focusing the camera on the player character
     setupCamera();
@@ -133,12 +131,13 @@ class GamePlay extends Component
           if (!gameOver) {
             loadPlatformModule(platformModulesFinish.elementAt(0));
             gameRef.player.velocityX = 16;
-            forestBackground.parallax?.baseVelocity = Vector2(2, 0);
+            
             gameOver = true;
           } else {
             //AudioManager.stopBgm();
-            gameRef.pauseEngine();
-            gameRef.overlays.add(GameOver.id);
+            forestBackground.parallax?.baseVelocity = Vector2(0, 0);
+            //gameRef.pauseEngine();
+            //gameRef.overlays.add(GameOver.id);
           }
         }
         break;
@@ -163,6 +162,6 @@ class GamePlay extends Component
   // Method for setting camera to follow the player
   void setupCamera() {
     gameRef.camera.followComponent(gameRef.player);
-    gameRef.camera.worldBounds = constants.levelBounds;
+    gameRef.camera.worldBounds = c.levelBounds;
   }
 }
