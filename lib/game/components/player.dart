@@ -177,7 +177,9 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         // If collision normal is almost upwards, player must be on ground.
         if (_up.dot(collisionNormal) > 0.9) {
           _isOnGround = true;
-          if (!_isAttacking && gameRef.playerData.alive.value && position.x < 40000) {
+          if (!_isAttacking &&
+              gameRef.playerData.alive.value &&
+              position.x < 40000) {
             animation = run;
           }
         }
@@ -248,7 +250,9 @@ class NeurunnerPlayer extends SpriteAnimationComponent
 
   //Attack method, called when user taps on the right side of the screen
   void attack() {
-    if (gameRef.playerData.bullets.value > 0 && !_isAttacking) {
+    if (gameRef.playerData.bullets.value > 0 &&
+        !_isAttacking &&
+        position.x < 40000) {
       _isAttacking = true;
       animation = swordSwing;
 

@@ -34,32 +34,15 @@ class GamePlay extends Component
 
   @override
   void update(dt) {
-    // Start moving the parallax background
-    if (gameRef.playerData.distance.value == 32) {
-      forestBackground.parallax?.baseVelocity = Vector2(30, 0);
-    }
-
-    // Start moving the parallax background slower on final level 
-    if (gameRef.playerData.distance.value >= 4000) {
-      forestBackground.parallax?.baseVelocity = Vector2(12, 0);
-    }
-
-    // Stop the background if player is dead or finish reached
-    if (!gameRef.playerData.alive.value || gameRef.playerData.distance.value == 4040) {
-      forestBackground.parallax?.baseVelocity = Vector2(0, 0);
-    }
-
+    // Load new module based on player position on the current one
     if (gameRef.player.position.x >
         c.moduleWidth * moduleCounter - c.moduleWidth / 2) {
       levelIndex = moduleCounter ~/ 10;
       loadNextModule(levelIndex, moduleCounter);
     }
 
-    if (gameRef.playerData.distance.value % 800 == 0 &&
-        gameRef.playerData.distance.value != 0) {
-      forestBackground.parallax?.baseVelocity =
-          Vector2(20 * (levelIndex + 1) - levelIndex * 5.toDouble(), 0);
-    }
+    // Update background velocity
+    updateBackgroundVelocity();
 
     super.update(dt);
   }
@@ -147,12 +130,7 @@ class GamePlay extends Component
           if (!gameOver) {
             loadPlatformModule(platformModulesFinish.elementAt(0));
             gameOver = true;
-          } else {
-            //AudioManager.stopBgm();
-            forestBackground.parallax?.baseVelocity = Vector2(0, 0);
-            //gameRef.pauseEngine();
-            //gameRef.overlays.add(GameOver.id);
-          }
+          } 
         }
         break;
     }
@@ -171,6 +149,32 @@ class GamePlay extends Component
     currentPlatform = PlatformModule(platformName, moduleCounter);
     add(currentPlatform!);
     moduleCounter++;
+  }
+
+  // Method for controling the parallax background velocity
+  void updateBackgroundVelocity() {
+    // Start moving the parallax background
+    if (gameRef.playerData.distance.value == 32) {
+      forestBackground.parallax?.baseVelocity = Vector2(30, 0);
+    }
+
+    // Start moving the parallax background slower on final level
+    if (gameRef.playerData.distance.value >= 4000) {
+      forestBackground.parallax?.baseVelocity = Vector2(12, 0);
+    }
+
+    // Stop the background if player is dead or finish reached
+    if (!gameRef.playerData.alive.value ||
+        gameRef.playerData.distance.value == 4040) {
+      forestBackground.parallax?.baseVelocity = Vector2(0, 0);
+    }
+
+    // Increase background velocity on new level
+    if (gameRef.playerData.distance.value % 800 == 0 &&
+        gameRef.playerData.distance.value != 0) {
+      forestBackground.parallax?.baseVelocity =
+          Vector2(20 * (levelIndex + 1) - levelIndex * 5.toDouble(), 0);
+    }
   }
 
   // Method for setting camera to follow the player
