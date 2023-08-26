@@ -34,6 +34,21 @@ class GamePlay extends Component
 
   @override
   void update(dt) {
+    // Start moving the parallax background
+    if (gameRef.playerData.distance.value == 32) {
+      forestBackground.parallax?.baseVelocity = Vector2(30, 0);
+    }
+
+    // Start moving the parallax background slower on final level 
+    if (gameRef.playerData.distance.value >= 4000) {
+      forestBackground.parallax?.baseVelocity = Vector2(12, 0);
+    }
+
+    // Stop the background if player is dead or finish reached
+    if (!gameRef.playerData.alive.value || gameRef.playerData.distance.value == 4040) {
+      forestBackground.parallax?.baseVelocity = Vector2(0, 0);
+    }
+
     if (gameRef.player.position.x >
         c.moduleWidth * moduleCounter - c.moduleWidth / 2) {
       levelIndex = moduleCounter ~/ 10;
@@ -68,7 +83,7 @@ class GamePlay extends Component
         ParallaxImageData('background/009_trees_front.png'),
         ParallaxImageData('background/012_leaves.png'),
       ],
-      baseVelocity: Vector2(30.0, 0),
+      baseVelocity: Vector2(0, 0),
       size: Vector2(640, 256),
       velocityMultiplierDelta: Vector2(1.1, 1.0),
       priority: -1,
@@ -87,6 +102,7 @@ class GamePlay extends Component
 
   // Method used to reset the player data for each game
   void resetPlayerData() {
+    gameRef.playerData.alive.value = true;
     gameRef.playerData.hp.value = 100;
     gameRef.playerData.distance.value = 0;
     gameRef.playerData.coins.value = 0;
@@ -130,8 +146,6 @@ class GamePlay extends Component
         {
           if (!gameOver) {
             loadPlatformModule(platformModulesFinish.elementAt(0));
-            gameRef.player.velocityX = 16;
-            
             gameOver = true;
           } else {
             //AudioManager.stopBgm();

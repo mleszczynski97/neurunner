@@ -11,7 +11,7 @@
   <object id="23" class="Ember" x="464" y="192" width="16" height="16"/>
   <object id="24" class="Ember" x="496" y="192" width="16" height="16"/>
   <object id="25" class="Mushroom" x="240" y="192" width="32" height="32"/>
-  <object id="27" class="Saw" x="336" y="192" width="16" height="16"/>
+  <object id="27" class="Saw" x="336" y="208" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="Platforms">
   <object id="10" x="0" y="224" width="800" height="32"/>

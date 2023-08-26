@@ -21,26 +21,28 @@ class Saw extends SpriteAnimationComponent
           scale: scale,
           angle: angle,
           anchor: anchor,
-          priority: priority,
+          priority: -1,
         ) {
     //debugMode = true;
   }
 
   @override
   Future<void> onLoad() async {
+    // Adding collision box
+    await add(RectangleHitbox()..collisionType = CollisionType.passive);
+    
     // Loading the sprite animation
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache('items/saw.png'),
       SpriteAnimationData.sequenced(
         amount: 8,
         textureSize: Vector2(38, 38),
-        stepTime: 0.03,
+        stepTime: 0.01,
         loop: true,
       ),
     );
 
-    // Adding collision box
-    await add(RectangleHitbox()..collisionType = CollisionType.passive);
+    
   }
 
   @override
@@ -56,6 +58,7 @@ class Saw extends SpriteAnimationComponent
   @override
   void update(double dt) {
     position.x += velocityX * dt;
+    priority = -1;
 
     if (gameRef.player.x > position.x + size.x + constants.viewportWidth / 2) {
       removeFromParent();

@@ -3,7 +3,6 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/input.dart';
 import 'package:neurunner/game/game.dart';
-import 'package:neurunner/game/gameplay.dart';
 import 'package:neurunner/game/managers/audio_manager.dart';
 import 'package:neurunner/game/screens/game_over.dart';
 import 'package:neurunner/game/screens/pause_menu.dart';
@@ -127,6 +126,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     levelComponent.add(OpacityEffect.fadeOut(EffectController(duration: 5)));
 
     // Listeners for player data
+    gameRef.playerData.alive.addListener(onAliveChange);
     gameRef.playerData.distance.addListener(onDistanceChange);
     gameRef.playerData.hp.addListener(onHpChange);
     gameRef.playerData.coins.addListener(onCoinsChange);
@@ -137,11 +137,36 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
 
   @override
   void onRemove() {
+    gameRef.playerData.alive.removeListener(onAliveChange);
     gameRef.playerData.distance.removeListener(onDistanceChange);
     gameRef.playerData.hp.removeListener(onHpChange);
     gameRef.playerData.coins.removeListener(onCoinsChange);
     gameRef.playerData.bullets.removeListener(onBulletsChange);
     super.onRemove();
+  }
+
+  void onAliveChange() {
+    if (!gameRef.playerData.alive.value) {
+      gameRef.player.velocityX = 0;
+      gameRef.player.animation = gameRef.player.death;
+      gameRef.player.add(OpacityEffect.fadeOut(
+        EffectController(
+          duration: 5,
+          alternate: false,
+        ),
+        onComplete: () {
+          removeAll([
+            distanceTextComponent,
+            pauseButtonComponent,
+            attackButtonComponent,
+            jumpButtonComponent,
+          ]);
+          AudioManager.stopBgm();
+          gameRef.pauseEngine();
+          gameRef.overlays.add(GameOver.id);
+        },
+      ));
+    }
   }
 
   void onDistanceChange() {
@@ -154,15 +179,21 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
       levelComponent.sprite = Sprite(game.images.fromCache(path));
       level == 1
           ? gameRef.player.velocityX = 120
-          : gameRef.player.velocityX += 20;
-      print(gameRef.player.velocityX);
+          : gameRef.player.velocityX += 500;
       levelComponent.add(OpacityEffect.fadeIn(EffectController(
         duration: 3,
         alternate: true,
       )));
     }
-    if (gameRef.playerData.distance.value == 4040) {
-      gameRef.player.velocityX = 0; 
+    // Walk animation
+    if (gameRef.playerData.distance.value >= 4001) {
+      gameRef.player.velocityX = 50;
+      gameRef.player.animation = gameRef.player.walk;
+      // Final distance
+      if (gameRef.playerData.distance.value >= 4040) {
+        gameRef.player.velocityX = 0;
+        gameRef.player.animation = gameRef.player.idle;
+      }
     }
   }
 
@@ -187,15 +218,7 @@ class Hud extends PositionComponent with HasGameRef<NeurunnerGame> {
     healthTextComponent.text = '${gameRef.playerData.hp.value}';
 
     if (gameRef.playerData.hp.value <= 0) {
-      removeAll([
-        distanceTextComponent,
-        pauseButtonComponent,
-        attackButtonComponent,
-        jumpButtonComponent,
-      ]);
-      AudioManager.stopBgm();
-      gameRef.pauseEngine();
-      gameRef.overlays.add(GameOver.id);
+      gameRef.playerData.alive.value = false;
     }
   }
 

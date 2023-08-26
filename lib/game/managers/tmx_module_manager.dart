@@ -97,7 +97,7 @@ class PlatformModule extends PositionComponent with HasGameRef<NeurunnerGame> {
         case 'Saw':
           final saw = Saw(
             position: position,
-            size: Vector2.all(18),
+            size: Vector2.all(32),
           );
           add(saw);
           break;

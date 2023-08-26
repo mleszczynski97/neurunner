@@ -25,6 +25,9 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   bool _isAttacking = false;
   late SpriteAnimation jumpUp;
   late SpriteAnimation run;
+  late SpriteAnimation walk;
+  late SpriteAnimation idle;
+  late SpriteAnimation death;
   late SpriteAnimation jumpDown;
   late SpriteAnimation swordSwing;
 
@@ -45,6 +48,27 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     size = Vector2(128, 32);
     add(CircleHitbox());
 
+    // Idle animation
+    idle = SpriteAnimation.fromFrameData(
+      game.images.fromCache('player/fire_idle.png'),
+      SpriteAnimationData.sequenced(
+        amount: 8,
+        textureSize: Vector2(192, 48),
+        stepTime: 0.1,
+      ),
+    );
+
+    // Death animation
+    death = SpriteAnimation.fromFrameData(
+      game.images.fromCache('player/fire_death.png'),
+      SpriteAnimationData.sequenced(
+        amount: 13,
+        textureSize: Vector2(192, 48),
+        stepTime: 0.1,
+        loop: false,
+      ),
+    );
+
     // Run animation
     run = SpriteAnimation.fromFrameData(
       game.images.fromCache('player/fire_run.png'),
@@ -52,6 +76,16 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         amount: 8,
         textureSize: Vector2(192, 48),
         stepTime: 0.1,
+      ),
+    );
+
+    // Walk animation
+    walk = SpriteAnimation.fromFrameData(
+      game.images.fromCache('player/fire_run.png'),
+      SpriteAnimationData.sequenced(
+        amount: 8,
+        textureSize: Vector2(192, 48),
+        stepTime: 0.2,
       ),
     );
 
@@ -100,12 +134,12 @@ class NeurunnerPlayer extends SpriteAnimationComponent
     }
 
     // Jumping animation check
-    if (velocityY != 0 && !_isAttacking) {
+    if (velocityY != 0 && !_isAttacking && gameRef.playerData.alive.value) {
       velocityY > 0 ? animation = jumpDown : animation = jumpUp;
     }
 
     // Burn condition at distance 3200 (level 5)
-    if (_isOnGround && position.x > 32000) {
+    if (_isOnGround && position.x > 32000 && position.x < 40000) {
       burnTick += dt;
       //print(burnTick);
       burn();
@@ -143,7 +177,9 @@ class NeurunnerPlayer extends SpriteAnimationComponent
         // If collision normal is almost upwards, player must be on ground.
         if (_up.dot(collisionNormal) > 0.9) {
           _isOnGround = true;
-          if (!_isAttacking) animation = run;
+          if (!_isAttacking && gameRef.playerData.alive.value && position.x < 40000) {
+            animation = run;
+          }
         }
 
         // Resolve collision by moving player along collision normal by separation distance.
@@ -177,7 +213,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   //Jump method, called when user taps on the left side of the screen
   void jump() {
     // Only initialize jump sequence when on ground
-    if (_isOnGround) {
+    if (_isOnGround && position.x < 40000) {
       // First jump
       burnTick = 0;
       velocityY = -300;
@@ -195,7 +231,7 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   //Jump method, called when user taps on the left side of the screen
   void shroomJump() {
     // Only initialize jump sequence when on ground
-    if (_isOnGround) {
+    if (_isOnGround && position.x < 40000) {
       // First jump
       burnTick = 0;
       velocityY = -470;
@@ -249,27 +285,29 @@ class NeurunnerPlayer extends SpriteAnimationComponent
   // Hit method, called when player collides with a spike or enemy
   void hit() {
     if (!_isHurt) {
-      gameRef.playerData.hp.value -= 10;
-      velocityY = -200;
-      _isHurt = true;
-      _isOnGround = false;
-      _canJump = false;
-      AudioManager.playSfx('Loose_15.wav');
-      add(ColorEffect(
-          Colors.red,
-          const Offset(0.0, 0.6),
-          EffectController(
-            duration: 1,
-            alternate: true,
-          )));
-      add(
-        OpacityEffect.fadeOut(
-          EffectController(duration: 0.2, alternate: true, repeatCount: 5),
-          onComplete: () {
-            _isHurt = false;
-          },
-        ),
-      );
+      gameRef.playerData.hp.value -= 1;
+      if (gameRef.playerData.hp.value > 0 && position.x < 40000) {
+        velocityY = -200;
+        _isHurt = true;
+        _isOnGround = false;
+        _canJump = false;
+        AudioManager.playSfx('Loose_15.wav');
+        add(ColorEffect(
+            Colors.red,
+            const Offset(0.0, 0.6),
+            EffectController(
+              duration: 1,
+              alternate: true,
+            )));
+        add(
+          OpacityEffect.fadeOut(
+            EffectController(duration: 0.2, alternate: true, repeatCount: 5),
+            onComplete: () {
+              _isHurt = false;
+            },
+          ),
+        );
+      }
     }
   }
 }
